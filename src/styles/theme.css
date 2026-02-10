@@ -1,37 +1,85 @@
-@theme {
-  /* yellow */
-  --color-yellow: #ffe50f;
+:root {
+  /* Primary Blue */
+  --primary-blue-100: #dbebfe;
+  --primary-blue-200: #b8d4fe;
+  --primary-blue-300: #94bbfd;
+  --primary-blue-400: #79a6fb;
+  --primary-blue-500: #4e83f9; /* Main */
+  --primary-blue-600: #3964d6;
+  --primary-blue-700: #2749b3;
+  --primary-blue-800: #183290;
+  --primary-blue-900: #0e2277;
 
-  /* green */
-  --color-green-500: #cfff5e;
+  /* Base */
+  --base-900: #111111;
+  --base-800: #1b1b1b;
+  --base-700: #2c2c2c;
+  --base-600: #454545;
+  --base-500: #5d5d5d;
+  --base-200: #e3e3e3;
+  --base-100: #ffffff;
 
-  /* purple */
-  --color-purple-50: #ebe8ff;
-  --color-purple-100: #dbd4ff;
-  --color-purple-200: #c5bbff;
-  --color-purple-300: #ab9cff;
-  --color-purple-400: #9481ff;
-  --color-purple-500: #7f68ff;
-  --color-purple-600: #7056ff;
-  --color-purple-700: #5b3ff7;
-  --color-purple-800: #472be2;
-  --color-purple-900: #3419c9;
+  --background-white: #ffffff;
+  --background-gray: #f5f5f5;
 
-  /* gray */
-  --color-gray-50: #eff2f9;
-  --color-gray-100: #e1e6f0;
-  --color-gray-200: #c9d0dd;
-  --color-gray-300: #b2b9c6;
-  --color-gray-400: #8b95a1;
-  --color-gray-500: #707883;
-  --color-gray-600: #5a626a;
-  --color-gray-700: #3f464d;
-  --color-gray-800: #2b2f35;
-  --color-gray-900: #20252b;
+  /* Opacity - Black */
+  --black-80: rgba(17, 17, 17, 0.8);
+  --black-60: rgba(17, 17, 17, 0.6);
+  --black-40: rgba(17, 17, 17, 0.4);
+  --black-20: rgba(17, 17, 17, 0.2);
+  --black-10: rgba(17, 17, 17, 0.1);
 
-  --color-white: #fcfeff;
-  --color-black: #111417;
+  /* Opacity - White */
+  --white-80: rgba(255, 255, 255, 0.8);
+  --white-60: rgba(255, 255, 255, 0.6);
+  --white-40: rgba(255, 255, 255, 0.4);
+  --white-20: rgba(255, 255, 255, 0.2);
+  --white-10: rgba(255, 255, 255, 0.1);
 
-  --color-black-25: rgba(0, 0, 0, 0.25);
-  --shadow-modal: 0 0 0.4rem 0 var(--color-black-25);
+  /* Opacity - Primary Blue */
+  --primary-blue-80: rgba(78, 131, 249, 0.8);
+  --primary-blue-60: rgba(78, 131, 249, 0.6);
+  --primary-blue-40: rgba(78, 131, 249, 0.4);
+  --primary-blue-20: rgba(78, 131, 249, 0.2);
+  --primary-blue-10: rgba(78, 131, 249, 0.1);
+
+  /* Font Family */
+  --font-ui:
+    'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-eng:
+    'Montserrat', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+
+  /* Heading */
+  --h-28b: 700 28px/140% var(--font-ui);
+  --h-24b: 700 24px/140% var(--font-ui);
+  --h-20b: 700 20px/140% var(--font-ui);
+  --h-18b: 700 18px/140% var(--font-ui);
+  --h-18sb: 600 18px/140% var(--font-ui);
+
+  /* Body */
+  --b-16b: 700 16px/140% var(--font-ui);
+  --b-16sb: 600 16px/140% var(--font-ui);
+  --b-16m: 500 16px/140% var(--font-ui);
+  --b-16r: 400 16px/140% var(--font-ui);
+
+  --b-14b: 700 14px/160% var(--font-ui);
+  --b-14m: 500 14px/140% var(--font-ui);
+  --b-14r: 400 14px/160% var(--font-ui);
+
+  /* Caption */
+  --c-12b: 700 12px/140% var(--font-ui);
+  --c-12m: 500 12px/140% var(--font-ui);
+  --c-12r: 400 12px/140% var(--font-ui);
+  --c-10m: 500 10px/160% var(--font-ui);
+
+  /* English - Heading */
+  --eng-28b: 700 28px/140% var(--font-eng);
+  --eng-24sb: 600 24px/120% var(--font-eng);
+  --eng-20sb: 600 20px/120% var(--font-eng);
+  --eng-18sb: 600 18px/140% var(--font-eng);
+  --eng-16b: 700 16px/140% var(--font-eng);
+
+  /* English - Body */
+  --eng-16sb: 600 16px/140% var(--font-eng);
+  --eng-14sb: 600 14px/140% var(--font-eng);
 }
