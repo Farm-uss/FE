@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
 import RootLayout from '@/layouts/RootLayout';
-import Home from '@/pages/Home';
+import Home from '@/pages/home/Home';
 
 const router = createBrowserRouter([
   {
