@@ -16,7 +16,7 @@
   }
 
   .pageContainer {
-    @apply mx-auto flex h-[100dvh] w-full max-w-[430px] flex-col overflow-hidden bg-purple-500;
+    @apply mx-auto flex h-[100dvh] w-full max-w-[430px] flex-col overflow-hidden;
   }
 
   .scrollArea {
