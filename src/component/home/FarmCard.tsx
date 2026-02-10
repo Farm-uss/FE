@@ -1,6 +1,5 @@
 import { Icon } from '@iconify/react';
 
-// 카드에 들어갈 데이터 타입 정의
 interface FarmCardProps {
   name: string;
   ownerName: string;
@@ -17,38 +16,42 @@ const FarmCard = ({
   cropName,
 }: FarmCardProps) => {
   return (
-    <div className="bg-[#E6E0D3] w-[260px] h-[150px] rounded-[16px] p-6 shadow-md shrink-0">
-      <div className="flex gap-4 items-start">
+    <div className="bg-[#E6E0D3] w-[260px] h-[150px] rounded-[16px] p-5 shadow-md shrink-0 flex flex-col">
+      <div className="flex gap-3 items-start">
         {/* 썸네일 박스 */}
         <div className="w-[80px] h-[80px] bg-white rounded-[13px] shrink-0"></div>
 
         {/* 카드 정보 */}
-        <div className="flex flex-col gap-2 w-full">
-          {/* 농장 이름 */}
-          <div className="bg-white w-[130px] h-[42px] rounded-xl px-3 py-2 flex items-center gap-2">
+        <div className="flex flex-col gap-2 flex-1 min-w-0">
+          <div className="bg-white h-[42px] rounded-xl px-3 flex items-center gap-2 w-full">
             <Icon
               icon="material-symbols:potted-plant"
-              className="text-black text-[24px]"
+              className="text-black text-[22px] shrink-0"
             />
-            <span className="text-body-14B truncate">{name}</span>
+            <span className="text-c-12m text-black truncate">{name}</span>
           </div>
 
-          {/* 멤버 정보 */}
-          <div className="bg-white w-[130px] h-[30px] rounded-xl px-3 py-2 flex items-center gap-2">
+          <div className="bg-white h-[30px] rounded-xl px-3 flex items-center gap-2 w-full">
             <Icon
               icon="material-symbols:group"
-              className="text-black text-[20px]"
+              className="text-black text-[18px] shrink-0"
             />
-            <span className="text-body-12M text-gray-600 truncate">
+            <span className="text-c-10m text-black truncate">
               {ownerName}님 외 {extraMemberCount}명
             </span>
           </div>
         </div>
       </div>
 
-      <div className="mt-4 flex gap-6 text-[11px] text-gray-600 font-medium px-2">
-        <span>위치 | {location}</span>
-        <span>작물명 | {cropName}</span>
+      <div className="mt-3.5 flex flex-col gap-0.5 px-1">
+        <div className="flex gap-2 text-c-10m text-black-60">
+          <span className="shrink-0">위치 |</span>
+          <span className="truncate">{location}</span>
+        </div>
+        <div className="flex gap-2 text-c-10m text-black-60">
+          <span className="shrink-0">작물명 |</span>
+          <span className="truncate">{cropName}</span>
+        </div>
       </div>
     </div>
   );

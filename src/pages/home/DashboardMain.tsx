@@ -4,7 +4,6 @@ import FarmCard from '@/component/home/FarmCard';
 
 import mainImg2 from '../../../public/img/MainImg2.svg';
 
-// 농장 데이터 리스트 타입 정의
 interface FarmData {
   id: number;
   name: string;
@@ -15,7 +14,6 @@ interface FarmData {
 }
 
 const DashboardMain = () => {
-  // 실제 데이터가 여러 개일 때를 가정해서 배열로 관리
   const myFarms: FarmData[] = [
     {
       id: 1,
@@ -54,11 +52,9 @@ const DashboardMain = () => {
             className="w-full h-auto object-contain"
           />
         </div>
-        <div className="relative z-10 p-8 pt-12">
-          <h1 className="text-heading-32B text-black leading-tight">
-            HELLO, 동열!
-          </h1>
-          <p className="text-heading-20B text-black mt-1">
+        <div className="relative z-10 p-12 pt-20">
+          <h1 className="text-h-24b text-black leading-tight">HELLO, 동열!</h1>
+          <p className="text-h-18sb text-black mt-1">
             당신의 농장을 관리 해주세요!
           </p>
         </div>
@@ -68,7 +64,7 @@ const DashboardMain = () => {
       <div className="flex-1 bg-white px-6 pt-10 pb-10 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] relative z-20">
         {/* 1. 내 농장 한눈에 보기 */}
         <section className="mb-10">
-          <h2 className="text-body-16B text-black mb-6">내 농장 한눈에 보기</h2>
+          <div className="text-b-14m text-black mb-6">내 농장 한눈에 보기</div>
           <div className="grid grid-cols-3 gap-3">
             {[
               { label: '총 농장', value: '19' },
@@ -77,11 +73,9 @@ const DashboardMain = () => {
             ].map((item, idx) => (
               <div key={idx} className="flex flex-col items-center">
                 <div className="w-full h-[85px] bg-[#E6E0D3] rounded-[18px] flex items-center justify-center border border-dashed border-[#20110A]">
-                  <span className="text-[32px] font-bold text-black">
-                    {item.value}
-                  </span>
+                  <span className="text-h-28b text-black">{item.value}</span>
                 </div>
-                <span className="text-[10px] text-gray-500 mt-2 text-center">
+                <span className="text-c-12b text-black-60 mt-2 text-center">
                   {item.label}
                 </span>
               </div>
@@ -94,8 +88,8 @@ const DashboardMain = () => {
         {/* 2. My FARM 섹션 */}
         <section>
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-body-16B text-black">My FARM</h2>
-            <button className="text-[10px] text-gray-500 bg-gray-100 px-3 py-1 rounded-full w-[85px] h-[30px]">
+            <h2 className="text-b-14m text-[#20110A]">My FARM</h2>
+            <button className="text-c-10m text-black-60 bg-[#E6E0D3]  py-1 rounded-full w-[85px] h-[30px]">
               농장 관리로 이동
             </button>
           </div>
