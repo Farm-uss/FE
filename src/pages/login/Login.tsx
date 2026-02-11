@@ -38,7 +38,7 @@ export default function Login() {
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('refreshToken', refreshToken);
 
-      navigate('/');
+      navigate('/home');
     } catch {
       alert('로그인에 실패했습니다.');
     }
