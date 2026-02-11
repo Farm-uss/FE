@@ -18,6 +18,9 @@
   .pageContainer {
     @apply mx-auto flex h-[100dvh] w-full max-w-[430px] flex-col overflow-hidden;
   }
+  .pageHeaderContainer {
+    @apply mx-auto flex h-[90dvh] w-full max-w-[430px] flex-col overflow-hidden;
+  }
 
   .scrollArea {
     @apply flex-1 overflow-y-auto min-h-0;

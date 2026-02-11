@@ -1,50 +1,72 @@
 import { Icon } from '@iconify/react';
+import { useEffect, useState } from 'react';
 
+import axiosInstance from '@/apis/axios';
 import FarmCard from '@/component/home/FarmCard';
 
 import mainImg2 from '../../../public/img/MainImg2.svg';
+// 서버 응답 데이터 타입 정의
+interface Member {
+  userId: number;
+  userName: string;
+  role: 'OWNER' | 'MEMBER';
+}
 
-interface FarmData {
-  id: number;
+interface FarmResponse {
+  farmId: number;
   name: string;
-  ownerName: string;
-  extraMemberCount: number;
   location: string;
-  cropName: string;
+  ownerName: string;
+  memberCount: number;
+  members: Member[];
+  crops: string[];
+  role: 'OWNER' | 'MEMBER';
+  createdDate: string;
 }
 
 const DashboardMain = () => {
-  const myFarms: FarmData[] = [
-    {
-      id: 1,
-      name: '동열 농장',
-      ownerName: '정동열',
-      extraMemberCount: 4,
-      location: '우리집',
-      cropName: '동열 토마토',
-    },
-    {
-      id: 2,
-      name: '동열 농장',
-      ownerName: '정동열',
-      extraMemberCount: 4,
-      location: '우리집',
-      cropName: '동열 토마토',
-    },
-    {
-      id: 3,
-      name: '동열 농장',
-      ownerName: '정동열',
-      extraMemberCount: 4,
-      location: '우리집',
-      cropName: '동열 토마토',
-    },
-  ];
+  const [farms, setFarms] = useState<FarmResponse[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchFarms = async () => {
+      try {
+        const res = await axiosInstance.get('/farms/my');
+
+        // 콘솔로 데이터 생김새 꼭 확인해봐 형!
+        console.log('실제 서버 응답:', res.data);
+
+        // 데이터가 바로 배열로 오는지, result 안에 배열이 있는지 체크
+        if (Array.isArray(res.data)) {
+          setFarms(res.data);
+        } else if (res.data && Array.isArray(res.data.result)) {
+          // 보통 이 경우가 많아!
+          setFarms(res.data.result);
+        } else {
+          setFarms([]); // 데이터가 없거나 형식이 다르면 빈 배열로 세팅해서 에러 방지
+        }
+      } catch (err) {
+        console.error('데이터 못 가져왔어 형:', err);
+        setFarms([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchFarms();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex-1 flex items-center justify-center bg-white text-b-16m">
+        데이터 불러오는 중... 잠시만!
+      </div>
+    );
+  }
 
   return (
-    <div className="pageContainer bg-[#E6E0D3] flex flex-col overflow-y-auto">
+    <div className="flex flex-col h-full">
       {/* --- 상단 영역 (이미지 + 인사말) --- */}
-      <div className="relative w-full h-[320px] shrink-0">
+      <div className="relative w-full h-[320px] shrink-0 bg-[#E6E0D3]">
         <div className="absolute inset-0 z-0 flex items-end">
           <img
             src={mainImg2}
@@ -62,19 +84,23 @@ const DashboardMain = () => {
 
       {/* --- 하단 리포트 영역 --- */}
       <div className="flex-1 bg-white px-6 pt-10 pb-10 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] relative z-20">
-        {/* 1. 내 농장 한눈에 보기 */}
+        {/* 1. 내 농장 한눈에 보기 (실제 계산된 값 적용) */}
         <section className="mb-10">
           <div className="text-b-14m text-black mb-6">내 농장 한눈에 보기</div>
+
           <div className="grid grid-cols-3 gap-3">
             {[
               { label: '총 농장', value: '19' },
+
               { label: '내가 만든 농장', value: '07' },
+
               { label: '초대 받은 농장', value: '12' },
             ].map((item, idx) => (
               <div key={idx} className="flex flex-col items-center">
                 <div className="w-full h-[85px] bg-[#E6E0D3] rounded-[18px] flex items-center justify-center border border-dashed border-[#20110A]">
                   <span className="text-h-28b text-black">{item.value}</span>
                 </div>
+
                 <span className="text-c-12b text-black-60 mt-2 text-center">
                   {item.label}
                 </span>
@@ -89,26 +115,26 @@ const DashboardMain = () => {
         <section>
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-b-14m text-[#20110A]">My FARM</h2>
-            <button className="text-c-10m text-black-60 bg-[#E6E0D3]  py-1 rounded-full w-[85px] h-[30px]">
+            <button className="text-c-10m text-black-60 bg-[#E6E0D3] py-1 rounded-full w-[85px] h-[30px]">
               농장 관리로 이동
             </button>
           </div>
 
-          <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory px-2 scroll ">
-            {/* 기존 농장 리스트 */}
-            {myFarms.map((farm) => (
-              <div key={farm.id} className="snap-center shrink-0">
+          <div className="flex gap-4 overflow-x-auto pb-4 px-2 scroll scrollbar-hide snap-x snap-mandatory">
+            {/* 서버에서 받아온 리얼 데이터 리스트 */}
+            {farms.map((farm) => (
+              <div key={farm.farmId} className="snap-center shrink-0">
                 <FarmCard
                   name={farm.name}
                   ownerName={farm.ownerName}
-                  extraMemberCount={farm.extraMemberCount}
+                  extraMemberCount={farm.memberCount} // 서버 응답 값 매핑
                   location={farm.location}
-                  cropName={farm.cropName}
+                  cropName={farm.crops[0] || '작물 없음'} // 첫 번째 작물 노출
                 />
               </div>
             ))}
 
-            {/* --- 마지막 농장 추가 카드 --- */}
+            {/* --- 농장 추가 카드 --- */}
             <div className="snap-center shrink-0">
               <button
                 onClick={() => console.log('농장 추가 페이지로 이동!')}
@@ -130,7 +156,7 @@ const DashboardMain = () => {
 
         {/* 푸터 */}
         <div className="mt-16 pb-4 text-center">
-          <p className="text-caption-12M text-gray-300 tracking-widest">
+          <p className="text-c-12m text-gray-300 tracking-widest">
             Smart FARM, Smart US.
           </p>
         </div>
