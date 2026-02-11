@@ -15,3 +15,9 @@ export interface FarmResponse {
   role: string;
   createdDate: string;
 }
+
+export interface FarmSummary {
+  totalFarmCount: number;
+  ownedFarmCount: number;
+  joinedFarmCount: number;
+}
