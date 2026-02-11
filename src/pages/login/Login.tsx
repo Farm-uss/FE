@@ -33,10 +33,12 @@ export default function Login() {
         password,
       });
 
-      const { accessToken, refreshToken } = res.data;
+      const { accessToken, refreshToken, nickname, id } = res.data;
 
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('refreshToken', refreshToken);
+      localStorage.setItem('nickname', nickname);
+      localStorage.setItem('id', id);
 
       navigate('/home');
     } catch {
