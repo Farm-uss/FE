@@ -21,3 +21,23 @@ export interface FarmSummary {
   ownedFarmCount: number;
   joinedFarmCount: number;
 }
+
+/** 농장 추가 요청 바디 */
+export interface FarmAddRequest {
+  name: string;
+  area: string;
+  address: string;
+  cropName: string;
+}
+
+/** 농장 추가 성공 응답 */
+export interface FarmAddResponse {
+  id: number;
+  name: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+  myRole: string;
+  createdAt: string;
+  area: number;
+}

@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
 import RootLayout from '@/layouts/RootLayout';
+import FarmAddPage from '@/pages/Farm/FarmAddPage';
 import DashboardMain from '@/pages/home/DashboardMain';
 import LandingMain from '@/pages/home/LandingMain';
 import Login from '@/pages/login/Login';
@@ -33,8 +34,8 @@ const router = createBrowserRouter([
       },
       // 4. 추후 늘어날 페이지들 (자동으로 헤더 붙음)
       {
-        path: 'farm-detail/:id',
-        element: <div>농장 상세 페이지</div>,
+        path: 'farm-add',
+        element: <FarmAddPage />,
       },
     ],
   },

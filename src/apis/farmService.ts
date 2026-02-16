@@ -1,5 +1,10 @@
 // src/apis/farmService.ts
-import type { FarmResponse, FarmSummary } from '@/types/farm';
+import type {
+  FarmAddRequest,
+  FarmAddResponse,
+  FarmResponse,
+  FarmSummary,
+} from '@/types/farm';
 
 import axiosInstance from './axios';
 
@@ -13,6 +18,15 @@ export const getMyFarms = async (): Promise<FarmResponse[]> => {
 /** 내 농장 요약 정보 가져오기 */
 export const getMyFarmsSummary = async (): Promise<FarmSummary> => {
   const response = await axiosInstance.get('/farms/my/summary');
+
+  return response.data;
+};
+
+/** 새로운 농장 추가하기 (POST) */
+export const addFarm = async (
+  farmData: FarmAddRequest,
+): Promise<FarmAddResponse> => {
+  const response = await axiosInstance.post('/farms/add', farmData);
 
   return response.data;
 };

@@ -1,5 +1,6 @@
 import { Icon } from '@iconify/react';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { getMyFarms, getMyFarmsSummary } from '@/apis/farmService';
 import FarmCard from '@/component/home/FarmCard';
@@ -8,6 +9,7 @@ import type { FarmResponse, FarmSummary } from '@/types/farm';
 import mainImg2 from '../../../public/img/MainImg2.svg';
 
 const DashboardMain = () => {
+  const navigate = useNavigate(); // 2. 훅 호출해서 함수 만들기
   const [farms, setFarms] = useState<FarmResponse[]>([]);
   // 요약 데이터 상태 추가
   const [summary, setSummary] = useState<FarmSummary | null>(null);
@@ -124,7 +126,7 @@ const DashboardMain = () => {
             {/* 농장 추가 카드 (항상 마지막에 위치) */}
             <div className="snap-center shrink-0">
               <button
-                onClick={() => console.log('농장 추가 페이지로 이동!')}
+                onClick={() => navigate('/farm-add')}
                 className="bg-[#F4F1EA] w-[260px] h-[150px] rounded-[16px] border-2 border-dashed border-gray-300 flex flex-col items-center justify-center gap-4 hover:bg-[#ede9de] transition-colors"
               >
                 <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-sm">
