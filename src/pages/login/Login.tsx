@@ -33,12 +33,14 @@ export default function Login() {
         password,
       });
 
-      const { accessToken, refreshToken } = res.data;
+      const { accessToken, refreshToken, nickname, id } = res.data;
 
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('refreshToken', refreshToken);
+      localStorage.setItem('nickname', nickname);
+      localStorage.setItem('id', id);
 
-      navigate('/');
+      navigate('/home');
     } catch {
       alert('로그인에 실패했습니다.');
     }

@@ -1,26 +1,33 @@
-import { Outlet, useLocation, useMatch } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
+
+import Header from '@/component/constants/Header';
 
 const RootLayout = () => {
   const { pathname } = useLocation();
-  const isSplash = useMatch('/');
-  const isLogin = pathname.startsWith('/login');
 
-  // 스플래시나 로그인일 때는 유틸리티 없이 본문만!
-  if (isSplash || isLogin) {
-    return <Outlet />;
+  // 헤더가 아예 없어야 하는 페이지 정의 (랜딩, 로그인)
+  const isFullScreenPage = pathname === '/' || pathname.startsWith('/login');
+
+  // 1. 랜딩이나 로그인일 때는 복잡한 구조 없이 본문만 꽉 차게!
+  if (isFullScreenPage) {
+    return (
+      <div className="pageContainer h-dvh overflow-hidden">
+        <Outlet />
+      </div>
+    );
   }
 
+  // 2. 그 외 모든 서비스 페이지 (Dashboard, 상세페이지 등)
   return (
-    <div className="pageContainer">
-      {/* 형이 만든 .scrollArea .scroll 클래스가 스크롤을 담당함.
-        여기에 h-full을 줘서 부모인 pageContainer의 높이를 꽉 채우게 해줘.
-      */}
-      <div className="scrollArea scroll h-full flex flex-col">
-        <div className="screenSection relative flex-1 flex flex-col">
-          <main className="mainSection flex-1 flex flex-col">
-            <Outlet />
-          </main>
+    <div className="pageContainer h-dvh overflow-hidden">
+      <div className="scrollArea scroll h-full flex flex-col overflow-hidden">
+        <div className="shrink-0 z-50">
+          <Header />
         </div>
+
+        <main className="mainSection flex-1 min-h-0 overflow-y-auto scroll">
+          <Outlet />
+        </main>
       </div>
     </div>
   );
