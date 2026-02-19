@@ -1,3 +1,4 @@
+import LoadingSpinner from '@/component/constants/LoadingSpinner';
 import DashboardHeader from '@/component/home/DashboardHeader';
 import FarmList from '@/component/home/FarmList'; // 농장 리스트 부분도 분리했다고 가정!
 import FarmSummary from '@/component/home/FarmSummary';
@@ -7,8 +8,7 @@ const DashboardMain = () => {
   const { farms, summary, loading } = useFarmData();
   const nickname = localStorage.getItem('nickname') || '동열';
 
-  if (loading)
-    return <div className="loading-style">데이터 불러오는 중...</div>;
+  if (loading) return <LoadingSpinner />;
 
   return (
     <div className="flex flex-col h-full bg-white">
