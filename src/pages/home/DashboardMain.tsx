@@ -6,9 +6,11 @@ import { useFarmData } from '@/hooks/useFarmData';
 
 const DashboardMain = () => {
   const { farms, summary, loading } = useFarmData();
-  const nickname = localStorage.getItem('nickname') || '동열';
+  const nickname = localStorage.getItem('nickname') || '닉네임';
 
-  if (loading) return <LoadingSpinner />;
+  if (loading) {
+    return <LoadingSpinner message="농장 정보를 가져오고 있습니다!" />;
+  }
 
   return (
     <div className="flex flex-col h-full bg-white">
