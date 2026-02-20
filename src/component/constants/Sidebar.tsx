@@ -15,7 +15,7 @@ const Sidebar = ({ isOpen, onClose, nickname }: Props) => {
 
   const handleMenuClick = (path: string, label: string) => {
     if (label === '로그아웃') {
-      if (!window.confirm('로그아웃 하시겠어요 형?')) return;
+      if (!window.confirm('로그아웃 하시겠어요?')) return;
       localStorage.removeItem('nickname');
       localStorage.removeItem('accessToken');
       onClose();
