@@ -1,6 +1,7 @@
-import { Icon } from '@iconify/react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import CommonHeader from '@/component/constants/CommonHeader';
 
 import step1Bar from '../../../public/icons/step1Bar.svg';
 import step2Bar from '../../../public/icons/step2Bar.svg';
@@ -52,19 +53,7 @@ const FarmAddPage = () => {
       <div className="relative z-10 flex h-full flex-col">
         <div className="flex-1 flex flex-col p-6 overflow-hidden">
           {/* 공통 헤더 */}
-          <header className="flex justify-between items-center pb-5 border-b border-[#8B8880] shrink-0">
-            <button
-              onClick={prevStep}
-              className="p-2 -ml-2 active:scale-90 transition-transform"
-            >
-              <Icon
-                icon="material-symbols:arrow-back-ios-new-rounded"
-                className="text-[24px] text-[#20110A]"
-              />
-            </button>
-            <h1 className="text-h-24b text-[#20110A]">나만의 농장 추가하기</h1>
-            <div className="w-10" />
-          </header>
+          <CommonHeader title="나만의 농장 추가하기" onPrev={prevStep} />
 
           <div className="text-center mt-4 shrink-0">
             <p className="text-b-14m text-gray-500">
