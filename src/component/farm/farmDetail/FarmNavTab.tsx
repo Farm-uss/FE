@@ -3,7 +3,7 @@ import { Icon } from '@iconify/react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 const FarmNavTab = () => {
-  const { id } = useParams();
+  const { farmId } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -13,18 +13,18 @@ const FarmNavTab = () => {
     <nav className="flex justify-center items-center gap-6 shrink-0 py-4">
       <MenuIcon
         icon="material-symbols:grid-view-outline-rounded"
-        onClick={() => navigate(`/farm/${id}`)}
-        active={isActive(`/farm/${id}`)}
+        onClick={() => navigate(`/farm/${farmId}`)}
+        active={isActive(`/farm/${farmId}`)}
       />
       <MenuIcon
         icon="material-symbols:photo-camera-outline-rounded"
-        onClick={() => navigate(`/farm/${id}/photos`)}
-        active={isActive(`/farm/${id}/photos`)}
+        onClick={() => navigate(`/farm/${farmId}/photos`)}
+        active={isActive(`/farm/${farmId}/photos`)}
       />
       <MenuIcon
         icon="material-symbols:sound-detection-glass-break-rounded"
-        onClick={() => navigate(`/farm/${id}/analysis`)}
-        active={isActive(`/farm/${id}/analysis`)}
+        onClick={() => navigate(`/farm/${farmId}/analysis`)}
+        active={isActive(`/farm/${farmId}/analysis`)}
       />
       <MenuIcon icon="material-symbols:bug-report" onClick={() => {}} />
       <MenuIcon

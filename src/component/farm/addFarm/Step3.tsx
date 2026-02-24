@@ -89,7 +89,7 @@ const Step3 = ({ onPrev, farmData }: Step3Props) => {
     <div className="w-full h-full flex flex-col items-center animate-fadeIn px-6 text-center">
       {/* 로딩 중일 때 전체 화면 로딩 스피너 처리 */}
       {isLoading && (
-        <div className="fixed inset-0 z-[300] bg-white/60 backdrop-blur-[2px] flex items-center justify-center">
+        <div className="fixed inset-0 z-300 bg-white/60 backdrop-blur-[2px] flex items-center justify-center">
           <LoadingSpinner />
         </div>
       )}

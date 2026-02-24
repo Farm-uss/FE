@@ -40,7 +40,7 @@ const router = createBrowserRouter([
         element: <FarmAddPage />,
       },
       {
-        path: 'farm/:id',
+        path: 'farm/:farmId',
         element: <FarmDetailPage />, // 상단 정보 + 탭 메뉴가 포함된 레이아웃
         children: [
           {

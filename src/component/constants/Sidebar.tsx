@@ -38,7 +38,7 @@ const Sidebar = ({ isOpen, onClose, nickname }: Props) => {
 
       {/* 2. 사이드바 내용 (absolute로 변경하여 컨테이너 안에 가둠) */}
       <aside
-        className={`absolute top-[52px] right-0 h-[calc(100%-52px)] w-[70%] bg-white z-45 shadow-[-4px_0_15px_rgba(0,0,0,0.1)] transform transition-transform duration-300 ease-in-out ${
+        className={`absolute top-[52px] right-0 h-[calc(100%-52px)] w-[70%] bg-white z-45 transform transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >

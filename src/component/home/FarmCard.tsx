@@ -1,6 +1,6 @@
 import { Icon } from '@iconify/react';
 
-import { useImageBlob } from '@/hooks/hooks/useImageBlob';
+import { useImageBlob } from '@/hooks/useImageBlob';
 
 interface FarmCardProps {
   name: string;

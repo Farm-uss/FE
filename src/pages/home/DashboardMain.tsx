@@ -13,14 +13,11 @@ const DashboardMain = () => {
   }
   return (
     <div className="pageContainer bg-white">
-      {/* 1. 헤더는 자기 높이 유지 */}
       <div className="shrink-0">
         <DashboardHeader nickname={nickname} />
       </div>
 
-      {/* 2. 하단 영역: 여기가 핵심! */}
       <div className="flex-1 px-6 pt-10 pb-10 shadow-report relative z-20 bg-white overflow-y-auto scrollbar-hide">
-        {/* flex-1이 남은 공간을 다 먹고, 내용이 많아지면 여기서만 스크롤이 생겨 */}
         <FarmSummary summary={summary} />
         <hr className="border-[#8B8880] mb-8" />
         <FarmList farms={farms} />
