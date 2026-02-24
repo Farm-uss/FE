@@ -1,151 +1,142 @@
-// src/pages/farm/FarmAddPage.tsx
+import { Icon } from '@iconify/react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { addFarm } from '@/apis/farmService';
-import type { FarmAddRequest } from '@/types/farm';
+import step1Bar from '../../../public/icons/step1Bar.svg';
+import step2Bar from '../../../public/icons/step2Bar.svg';
+import step3Bar from '../../../public/icons/step3Bar.svg';
+import farmAddBgImg from '../../../public/img/FarmAddBgImg.svg';
+import Step1 from './Step1';
+import Step2 from './Step2';
+import Step3 from './Step3';
 
 const FarmAddPage = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState<FarmAddRequest>({
-    name: '',
-    area: '', // string으로 받지만 나중에 숫자로 변환 필요할 수 있음
-    address: '',
-    cropName: '',
-  });
+  const [step, setStep] = useState(1);
 
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  // ✨ 서버 전송용 상태들 (State Lifting)
+  const [farmName, setFarmName] = useState('');
+  const [address, setAddress] = useState('');
+  const [detailAddress, setDetailAddress] = useState('');
+  const [area, setArea] = useState('');
+  const [selectedCrop, setSelectedCrop] = useState('상추');
+  const [customCrop, setCustomCrop] = useState('');
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const prevStep = () =>
+    step === 1 ? navigate(-1) : setStep((prev) => prev - 1);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null); // 에러 초기화
-
-    try {
-      await addFarm(formData);
-      alert('농장이 성공적으로 등록되었습니다!');
-      navigate('/home'); // 성공하면 대시보드로 이동
-    } catch (err) {
-      console.error('농장 등록 실패:', err);
-      setError('농장 등록에 실패했어. 다시 시도해줘 형!');
-      // 서버에서 보낸 에러 메시지가 있다면 그걸 보여줄 수도 있음
-      // setError(err.response?.data?.message || '농장 등록에 실패했어. 다시 시도해줘 형!');
-    } finally {
-      setLoading(false);
+  const getStepChar = () => {
+    switch (step) {
+      case 1:
+        return step1Bar;
+      case 2:
+        return step2Bar;
+      case 3:
+        return step3Bar;
+      default:
+        return step1Bar;
     }
   };
 
   return (
-    <div className="flex flex-col h-full bg-white p-6">
-      {/* 타이틀 영역 */}
-      <div className="mb-8 mt-4 text-center">
-        <h1 className="text-h-24b text-black">나만의 농장 등록하기</h1>
-        <p className="text-b-14m text-gray-500 mt-2">
-          새로운 농장을 추가하여 관리해 보세요.
-        </p>
+    <div
+      className={`relative pageContainer h-full overflow-hidden transition-colors duration-500 ${step === 1 ? 'bg-transparent' : 'bg-white'}`}
+    >
+      {/* 1단계 배경 이미지 */}
+      <div
+        className={`absolute inset-0 z-0 transition-opacity duration-700 ${step === 1 ? 'opacity-80' : 'opacity-0 invisible'}`}
+      >
+        <img src={farmAddBgImg} alt="" className="w-full h-full object-cover" />
       </div>
 
-      {/* 폼 영역 */}
-      <form onSubmit={handleSubmit} className="flex-1 flex flex-col gap-5">
-        {/* 농장 이름 */}
-        <div>
-          <label htmlFor="name" className="block text-b-14m text-black mb-2">
-            농장 이름
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="예: 김아무개의 스마트 농장"
-            className="w-full p-3 border border-gray-300 rounded-lg text-b-14m focus:outline-none focus:ring-2 focus:ring-green-500"
-            required
-          />
-        </div>
+      <div className="relative z-10 flex h-full flex-col">
+        <div className="flex-1 flex flex-col p-6 overflow-hidden">
+          {/* 공통 헤더 */}
+          <header className="flex justify-between items-center pb-5 border-b border-[#8B8880] shrink-0">
+            <button
+              onClick={prevStep}
+              className="p-2 -ml-2 active:scale-90 transition-transform"
+            >
+              <Icon
+                icon="material-symbols:arrow-back-ios-new-rounded"
+                className="text-[24px] text-[#20110A]"
+              />
+            </button>
+            <h1 className="text-h-24b text-[#20110A]">나만의 농장 추가하기</h1>
+            <div className="w-10" />
+          </header>
 
-        {/* 면적 */}
-        <div>
-          <label htmlFor="area" className="block text-b-14m text-black mb-2">
-            면적 (단위: 평 또는 m²)
-          </label>
-          <input
-            type="text"
-            id="area"
-            name="area"
-            value={formData.area}
-            onChange={handleChange}
-            placeholder="예: 100평 또는 330m²"
-            className="w-full p-3 border border-gray-300 rounded-lg text-b-14m focus:outline-none focus:ring-2 focus:ring-green-500"
-            required
-          />
-        </div>
+          <div className="text-center mt-4 shrink-0">
+            <p className="text-b-14m text-gray-500">
+              새로운 농장을 등록하고 스마트팜 시스템을 시작하세요.
+            </p>
+          </div>
 
-        {/* 주소 */}
-        <div>
-          <label htmlFor="address" className="block text-b-14m text-black mb-2">
-            농장 주소
-          </label>
-          <input
-            type="text"
-            id="address"
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            placeholder="예: 경기도 이천시 스마트농장길 123-45"
-            className="w-full p-3 border border-gray-300 rounded-lg text-b-14m focus:outline-none focus:ring-2 focus:ring-green-500"
-            required
-          />
-          {/* 나중에 주소 API (카카오 지도 등) 연동할 자리 */}
-          <button
-            type="button"
-            className="mt-2 text-c-12m text-blue-600 hover:underline"
-            onClick={() => alert('나중에 주소 검색 API 연동할게요 형!')}
+          <main
+            className={`flex-1 flex flex-col min-h-0 pt-6 ${step !== 2 ? 'items-center justify-center' : ''}`}
           >
-            주소 검색
-          </button>
+            {step === 1 && <Step1 onNext={() => setStep(2)} />}
+            {step === 2 && (
+              <Step2
+                onNext={() => setStep(3)}
+                onPrev={prevStep}
+                farmName={farmName}
+                setFarmName={setFarmName}
+                address={address}
+                setAddress={setAddress}
+                detailAddress={detailAddress}
+                setDetailAddress={setDetailAddress}
+                area={area}
+                setArea={setArea}
+                selectedCrop={selectedCrop}
+                setSelectedCrop={setSelectedCrop}
+                customCrop={customCrop}
+                setCustomCrop={setCustomCrop}
+              />
+            )}
+            {step === 3 && (
+              <Step3
+                onPrev={prevStep}
+                farmData={{
+                  name: farmName,
+                  address: `${address} ${detailAddress}`.trim(),
+                  area: Number(area),
+                  cropName: selectedCrop === '기타' ? customCrop : selectedCrop,
+                }}
+              />
+            )}
+          </main>
         </div>
 
-        {/* 작물명 */}
-        <div>
-          <label
-            htmlFor="cropName"
-            className="block text-b-14m text-black mb-2"
-          >
-            주요 작물명
-          </label>
-          <input
-            type="text"
-            id="cropName"
-            name="cropName"
-            value={formData.cropName}
-            onChange={handleChange}
-            placeholder="예: 딸기, 상추, 토마토"
-            className="w-full p-3 border border-gray-300 rounded-lg text-b-14m focus:outline-none focus:ring-2 focus:ring-green-500"
-            required
-          />
-        </div>
-
-        {/* 에러 메시지 */}
-        {error && <p className="text-red-500 text-c-12m mt-2">{error}</p>}
-
-        {/* 등록 버튼 */}
-        <button
-          type="submit"
-          disabled={loading} // 로딩 중에는 버튼 비활성화
-          className="w-full py-3 mt-auto bg-green-600 text-white text-h-18sb rounded-lg hover:bg-green-700 transition-colors disabled:bg-gray-400"
-        >
-          {loading ? '등록 중...' : '농장 등록하기'}
-        </button>
-      </form>
+        {/* 하단 진행률 바 */}
+        <footer className="shrink-0 bg-[#E8E2D5] p-6 flex flex-col gap-6">
+          <div className="flex flex-col gap-3">
+            <div className="w-full h-2.5 bg-white rounded-full relative">
+              <div
+                className="h-full bg-[#20110A] transition-all duration-500 rounded-full"
+                style={{ width: `${(step / 3) * 100}%` }}
+              />
+              <div
+                className="absolute top-1/2 -translate-y-1/2 w-10 h-10 transition-all duration-500"
+                style={{ left: `calc(${(step / 3) * 100}% - 20px)` }}
+              >
+                <img
+                  src={getStepChar()}
+                  alt={`step ${step}`}
+                  className="w-full h-full object-contain"
+                />
+              </div>
+            </div>
+            <div className="flex justify-between items-center px-1 text-c-12m text-[#20110A]">
+              <span>단계 {step}/3</span>
+              <span className="font-bold">{Math.round((step / 3) * 100)}%</span>
+            </div>
+          </div>
+          <div className="text-center text-c-10m text-[#20110A]/40 uppercase tracking-widest font-medium">
+            Smart FARM, Smart US.
+          </div>
+        </footer>
+      </div>
     </div>
   );
 };

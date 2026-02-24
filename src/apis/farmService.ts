@@ -26,7 +26,28 @@ export const getMyFarmsSummary = async (): Promise<FarmSummary> => {
 export const addFarm = async (
   farmData: FarmAddRequest,
 ): Promise<FarmAddResponse> => {
-  const response = await axiosInstance.post('/farms/add', farmData);
+  const formData = new FormData();
+
+  if (farmData.image) {
+    formData.append('image', farmData.image);
+  } else {
+    // 기본 이미지일 때 서버 가이드가 null 전송이라면 아래처럼 추가
+    // formData.append('image', new Blob(), ""); // 혹은 아예 안 보낼 수도 있어.
+    formData.append('image', new Blob(), '');
+  }
+  console.log(formData);
+  const response = await axiosInstance.post('/farms/add', formData, {
+    params: {
+      name: farmData.name,
+      area: farmData.area,
+      address: farmData.address,
+      cropName: farmData.cropName,
+    },
+
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
 
   return response.data;
 };
