@@ -6,9 +6,9 @@ import step1Bar from '../../../public/icons/step1Bar.svg';
 import step2Bar from '../../../public/icons/step2Bar.svg';
 import step3Bar from '../../../public/icons/step3Bar.svg';
 import farmAddBgImg from '../../../public/img/FarmAddBgImg.svg';
-import Step1 from './Step1';
-import Step2 from './Step2';
-import Step3 from './Step3';
+import Step1 from '../../component/farm/addFarm/Step1';
+import Step2 from '../../component/farm/addFarm/Step2';
+import Step3 from '../../component/farm/addFarm/Step3';
 
 const FarmAddPage = () => {
   const navigate = useNavigate();
