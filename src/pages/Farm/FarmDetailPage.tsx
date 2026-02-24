@@ -1,6 +1,7 @@
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 
 import CommonHeader from '@/component/constants/CommonHeader';
+import LoadingSpinner from '@/component/constants/LoadingSpinner';
 import FarmInfoSection from '@/component/farm/farmDetail/FarmInfoSection';
 import FarmNavTab from '@/component/farm/farmDetail/FarmNavTab';
 import { useFarmData } from '@/hooks/useFarmData';
@@ -15,7 +16,8 @@ const FarmDetailPage = () => {
   const farmInfo = farms.find((f) => String(f.farmId) === farmId);
 
   // 로딩 중이거나 데이터를 찾지 못했을 때 예외 처리
-  if (loading) return <div className="bg-[#F4F1EA] h-dvh" />;
+  if (loading)
+    return <LoadingSpinner message="농장 정보를 가져오고 있습니다!" />;
   if (error || !farmInfo) {
     return (
       <div className="bg-[#F4F1EA] h-dvh flex items-center justify-center">
