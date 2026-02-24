@@ -32,7 +32,11 @@ const FarmList = ({ farms }: Props) => {
       >
         {/* 1. 기존 농장들 */}
         {farms.map((farm) => (
-          <div key={farm.farmId} className="snap-center shrink-0">
+          <div
+            key={farm.farmId}
+            className="snap-center shrink-0 cursor-pointer active:scale-[0.98] transition-transform"
+            onClick={() => navigate(`/farm/${farm.farmId}`)}
+          >
             <FarmCard
               name={farm.name}
               ownerName={farm.ownerName}

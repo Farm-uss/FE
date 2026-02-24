@@ -1,7 +1,7 @@
 import { Icon } from '@iconify/react';
 import { Link, useNavigate } from 'react-router-dom';
 
-import HeaderIcon from '../../../public/icons/HedartIcon.svg';
+import HeaderIcon from '../../assets/icons/common/HedartIcon.svg';
 
 interface Props {
   onMenuClick: () => void;

@@ -1,14 +1,15 @@
-import { Icon } from '@iconify/react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import step1Bar from '../../../public/icons/step1Bar.svg';
-import step2Bar from '../../../public/icons/step2Bar.svg';
-import step3Bar from '../../../public/icons/step3Bar.svg';
-import farmAddBgImg from '../../../public/img/FarmAddBgImg.svg';
-import Step1 from './Step1';
-import Step2 from './Step2';
-import Step3 from './Step3';
+import CommonHeader from '@/component/constants/CommonHeader';
+
+import step1Bar from '../../assets/icons/farmAdd/step1Bar.svg';
+import step2Bar from '../../assets/icons/farmAdd/step2Bar.svg';
+import step3Bar from '../../assets/icons/farmAdd/step3Bar.svg';
+import farmAddBgImg from '../../assets/image/farmAdd/FarmAddBgImg.svg';
+import Step1 from '../../component/farm/addFarm/Step1';
+import Step2 from '../../component/farm/addFarm/Step2';
+import Step3 from '../../component/farm/addFarm/Step3';
 
 const FarmAddPage = () => {
   const navigate = useNavigate();
@@ -52,19 +53,7 @@ const FarmAddPage = () => {
       <div className="relative z-10 flex h-full flex-col">
         <div className="flex-1 flex flex-col p-6 overflow-hidden">
           {/* 공통 헤더 */}
-          <header className="flex justify-between items-center pb-5 border-b border-[#8B8880] shrink-0">
-            <button
-              onClick={prevStep}
-              className="p-2 -ml-2 active:scale-90 transition-transform"
-            >
-              <Icon
-                icon="material-symbols:arrow-back-ios-new-rounded"
-                className="text-[24px] text-[#20110A]"
-              />
-            </button>
-            <h1 className="text-h-24b text-[#20110A]">나만의 농장 추가하기</h1>
-            <div className="w-10" />
-          </header>
+          <CommonHeader title="나만의 농장 추가하기" onPrev={prevStep} />
 
           <div className="text-center mt-4 shrink-0">
             <p className="text-b-14m text-gray-500">

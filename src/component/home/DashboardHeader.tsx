@@ -1,4 +1,4 @@
-import mainImg2 from '../../../public/img/MainImg2.svg';
+import mainImg2 from '../../assets/image/main/MainImg2.svg';
 
 interface Props {
   nickname: string;

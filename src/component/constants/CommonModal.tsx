@@ -1,4 +1,4 @@
-import character from '../../../public/img/character2.svg';
+import character from '../../assets/image/common/character2.svg';
 
 interface CommonModalProps {
   isOpen: boolean;

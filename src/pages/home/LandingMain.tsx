@@ -1,9 +1,9 @@
 import { Link } from 'react-router-dom';
 
-import flowerGreen from '../../../public/icons/flowerGreen.svg';
-import flowerYellowgreen from '../../../public/icons/flowerYellowgreen.svg';
-import mainImg from '../../../public/img/mainImg1.svg';
-import mianLogo from '../../../public/MainLogo.svg';
+import flowerGreen from '../../assets/icons/home/flowerGreen.svg';
+import flowerYellowgreen from '../../assets/icons/home/flowerYellowgreen.svg';
+import mianLogo from '../../assets/image/common/MainLogo.svg';
+import mainImg from '../../assets/image/main/mainImg1.svg';
 
 const LandingMain = () => {
   return (

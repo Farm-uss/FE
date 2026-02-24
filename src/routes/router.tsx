@@ -4,6 +4,8 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import RootLayout from '@/layouts/RootLayout';
 import FarmAddPage from '@/pages/Farm/FarmAddPage';
+import FarmDashboard from '@/pages/Farm/FarmDashboard';
+import FarmDetailPage from '@/pages/Farm/FarmDetailPage';
 import DashboardMain from '@/pages/home/DashboardMain';
 import LandingMain from '@/pages/home/LandingMain';
 import Login from '@/pages/login/Login';
@@ -36,6 +38,25 @@ const router = createBrowserRouter([
       {
         path: 'farm-add',
         element: <FarmAddPage />,
+      },
+      {
+        path: 'farm/:farmId',
+        element: <FarmDetailPage />, // 상단 정보 + 탭 메뉴가 포함된 레이아웃
+        children: [
+          {
+            index: true, // /farm/23 접속 시 기본으로 보여줄 화면
+            element: <FarmDashboard />,
+          },
+          {
+            path: 'photos', // /farm/23/photos
+            element: <div>사진첩 페이지 (준비중)</div>,
+          },
+          {
+            path: 'analysis', // /farm/23/analysis
+            element: <div>통계 분석 페이지 (준비중)</div>,
+          },
+          // ... 나머지 메뉴 아이콘들에 대응하는 라우트들 추가
+        ],
       },
     ],
   },
