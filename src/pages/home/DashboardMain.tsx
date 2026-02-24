@@ -14,9 +14,7 @@ const DashboardMain = () => {
   }
 
   return (
-    /* ✨ 1. 최상단은 화면에 딱 고정 (스크롤 방지) */
     <div className="pageContainer bg-white h-dvh flex flex-col overflow-hidden">
-      {/* ✨ 2. 여기가 실제 스크롤이 일어나는 '스크롤 통' */}
       <div className="flex-1 overflow-y-auto overflow-x-hidden scroll flex flex-col">
         {/* 헤더 부분 */}
         <div className="shrink-0">
@@ -24,13 +22,12 @@ const DashboardMain = () => {
         </div>
 
         {/* 메인 컨텐츠 영역 */}
-        {/* h-auto를 줘서 내용이 길어지는 대로 쭉 늘어나게 함 */}
+
         <div className="flex-1 px-6 pt-10 pb-10 shadow-report relative z-20 bg-white h-auto">
           <FarmSummary summary={summary} />
           <hr className="border-[#8B8880] mb-8" />
           <FarmList farms={farms} />
 
-          {/* 푸터 문구 */}
           <Footer />
         </div>
       </div>
