@@ -27,7 +27,7 @@ const FarmList = ({ farms }: Props) => {
         className={`flex gap-4 pb-4 px-2 ${
           farms.length === 0
             ? 'justify-center'
-            : 'overflow-x-auto scrollbar-hide snap-x snap-mandatory'
+            : 'overflow-x-auto scroll snap-x snap-mandatory'
         }`}
       >
         {/* 1. 기존 농장들 */}

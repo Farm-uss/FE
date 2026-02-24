@@ -1,6 +1,7 @@
+import Footer from '@/component/constants/Footer';
 import LoadingSpinner from '@/component/constants/LoadingSpinner';
 import DashboardHeader from '@/component/home/DashboardHeader';
-import FarmList from '@/component/home/FarmList'; // 농장 리스트 부분도 분리했다고 가정!
+import FarmList from '@/component/home/FarmList';
 import FarmSummary from '@/component/home/FarmSummary';
 import { useFarmData } from '@/hooks/useFarmData';
 
@@ -11,21 +12,26 @@ const DashboardMain = () => {
   if (loading) {
     return <LoadingSpinner message="농장 정보를 가져오고 있습니다!" />;
   }
+
   return (
-    <div className="pageContainer bg-white">
-      <div className="shrink-0">
-        <DashboardHeader nickname={nickname} />
-      </div>
+    /* ✨ 1. 최상단은 화면에 딱 고정 (스크롤 방지) */
+    <div className="pageContainer bg-white h-dvh flex flex-col overflow-hidden">
+      {/* ✨ 2. 여기가 실제 스크롤이 일어나는 '스크롤 통' */}
+      <div className="flex-1 overflow-y-auto overflow-x-hidden scroll flex flex-col">
+        {/* 헤더 부분 */}
+        <div className="shrink-0">
+          <DashboardHeader nickname={nickname} />
+        </div>
 
-      <div className="flex-1 px-6 pt-10 pb-10 shadow-report relative z-20 bg-white overflow-y-auto scrollbar-hide">
-        <FarmSummary summary={summary} />
-        <hr className="border-[#8B8880] mb-8" />
-        <FarmList farms={farms} />
+        {/* 메인 컨텐츠 영역 */}
+        {/* h-auto를 줘서 내용이 길어지는 대로 쭉 늘어나게 함 */}
+        <div className="flex-1 px-6 pt-10 pb-10 shadow-report relative z-20 bg-white h-auto">
+          <FarmSummary summary={summary} />
+          <hr className="border-[#8B8880] mb-8" />
+          <FarmList farms={farms} />
 
-        <div className="mt-16 pb-4 text-center">
-          <p className="text-c-12m text-gray-300 tracking-widest">
-            Smart FARM, Smart US.
-          </p>
+          {/* 푸터 문구 */}
+          <Footer />
         </div>
       </div>
     </div>
