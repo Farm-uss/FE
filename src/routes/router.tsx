@@ -7,6 +7,7 @@ import FarmAddPage from '@/pages/Farm/FarmAddPage';
 import DashboardMain from '@/pages/home/DashboardMain';
 import LandingMain from '@/pages/home/LandingMain';
 import Login from '@/pages/login/Login';
+import ManageFarmsPage from '@/pages/manage/manage';
 
 const router = createBrowserRouter([
   {
@@ -36,6 +37,11 @@ const router = createBrowserRouter([
       {
         path: 'farm-add',
         element: <FarmAddPage />,
+      },
+      // 내 농장 관리
+      {
+        path: 'manage',
+        element: <ManageFarmsPage />,
       },
     ],
   },
