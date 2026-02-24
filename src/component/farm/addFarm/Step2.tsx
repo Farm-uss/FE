@@ -7,7 +7,7 @@ import {
 } from 'react';
 import type { Address } from 'react-daum-postcode';
 
-import step2Flower from '../../../../public/icons/step2Flower.svg';
+import step2Flower from '../../../assets/icons/farmAdd/step2Flower.svg';
 import AddressSearchModal from './AddressSearchModal';
 import CropSelector from './CropSelector';
 import FormSection from './FormSection';

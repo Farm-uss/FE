@@ -1,6 +1,6 @@
 import { Icon } from '@iconify/react';
 
-import Footer from '@/component/constants/footer';
+import Footer from '@/component/constants/Footer';
 import SensorCard from '@/component/farm/farmDetail/SensorCard';
 
 const FarmDashboard = () => {

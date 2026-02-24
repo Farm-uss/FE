@@ -6,7 +6,7 @@ import { addFarm } from '@/apis/farmService';
 import CommonModal from '@/component/constants/CommonModal';
 import LoadingSpinner from '@/component/constants/LoadingSpinner';
 
-import basicFarmImg from '../../../../public/icons/farmBasicImg.svg';
+import basicFarmImg from '../../../assets/icons/common/farmBasicImg.svg';
 
 interface Step3Props {
   onPrev: () => void;

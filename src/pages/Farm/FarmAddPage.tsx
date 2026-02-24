@@ -3,10 +3,10 @@ import { useNavigate } from 'react-router-dom';
 
 import CommonHeader from '@/component/constants/CommonHeader';
 
-import step1Bar from '../../../public/icons/step1Bar.svg';
-import step2Bar from '../../../public/icons/step2Bar.svg';
-import step3Bar from '../../../public/icons/step3Bar.svg';
-import farmAddBgImg from '../../../public/img/FarmAddBgImg.svg';
+import step1Bar from '../../assets/icons/farmAdd/step1Bar.svg';
+import step2Bar from '../../assets/icons/farmAdd/step2Bar.svg';
+import step3Bar from '../../assets/icons/farmAdd/step3Bar.svg';
+import farmAddBgImg from '../../assets/image/farmAdd/FarmAddBgImg.svg';
 import Step1 from '../../component/farm/addFarm/Step1';
 import Step2 from '../../component/farm/addFarm/Step2';
 import Step3 from '../../component/farm/addFarm/Step3';

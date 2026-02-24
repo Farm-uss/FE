@@ -2,7 +2,7 @@
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 
-import sidebarImg from '../../../public/img/rightGnbImg.svg';
+import sidebarImg from '../../assets/image/gnb/rightGnbImg.svg';
 
 interface Props {
   isOpen: boolean;
