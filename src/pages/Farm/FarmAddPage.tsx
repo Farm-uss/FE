@@ -1,14 +1,16 @@
-import { Icon } from '@iconify/react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import step1Bar from '../../../public/icons/step1Bar.svg';
-import step2Bar from '../../../public/icons/step2Bar.svg';
-import step3Bar from '../../../public/icons/step3Bar.svg';
-import farmAddBgImg from '../../../public/img/FarmAddBgImg.svg';
-import Step1 from './Step1';
-import Step2 from './Step2';
-import Step3 from './Step3';
+import CommonHeader from '@/component/constants/CommonHeader';
+import Footer from '@/component/constants/Footer';
+
+import step1Bar from '../../assets/icons/farmAdd/step1Bar.svg';
+import step2Bar from '../../assets/icons/farmAdd/step2Bar.svg';
+import step3Bar from '../../assets/icons/farmAdd/step3Bar.svg';
+import farmAddBgImg from '../../assets/image/farmAdd/FarmAddBgImg.svg';
+import Step1 from '../../component/farm/addFarm/Step1';
+import Step2 from '../../component/farm/addFarm/Step2';
+import Step3 from '../../component/farm/addFarm/Step3';
 
 const FarmAddPage = () => {
   const navigate = useNavigate();
@@ -39,77 +41,74 @@ const FarmAddPage = () => {
   };
 
   return (
+    /* ✨ 1. 부모 컨테이너: 화면 높이 고정 및 배경 처리 */
     <div
-      className={`relative pageContainer h-full overflow-hidden transition-colors duration-500 ${step === 1 ? 'bg-transparent' : 'bg-white'}`}
+      className={`relative pageContainer h-dvh overflow-hidden transition-colors duration-500 ${
+        step === 1 ? 'bg-transparent' : 'bg-white'
+      }`}
     >
-      {/* 1단계 배경 이미지 */}
+      {/* 1단계 배경 이미지: absolute로 고정해서 내용만 스크롤 되게 함 */}
       <div
-        className={`absolute inset-0 z-0 transition-opacity duration-700 ${step === 1 ? 'opacity-80' : 'opacity-0 invisible'}`}
+        className={`absolute inset-0 z-0 transition-opacity duration-700 ${
+          step === 1 ? 'opacity-80' : 'opacity-0 invisible'
+        }`}
       >
         <img src={farmAddBgImg} alt="" className="w-full h-full object-cover" />
       </div>
 
-      <div className="relative z-10 flex h-full flex-col">
-        <div className="flex-1 flex flex-col p-6 overflow-hidden">
-          {/* 공통 헤더 */}
-          <header className="flex justify-between items-center pb-5 border-b border-[#8B8880] shrink-0">
-            <button
-              onClick={prevStep}
-              className="p-2 -ml-2 active:scale-90 transition-transform"
-            >
-              <Icon
-                icon="material-symbols:arrow-back-ios-new-rounded"
-                className="text-[24px] text-[#20110A]"
-              />
-            </button>
-            <h1 className="text-h-24b text-[#20110A]">나만의 농장 추가하기</h1>
-            <div className="w-10" />
-          </header>
+      {/* ✨ 2. 실제 스크롤이 일어나는 통: 형이 만든 .scroll 클래스 적용 */}
+      <div className="relative z-10 flex flex-col h-full overflow-y-auto overflow-x-hidden scroll">
+        {/* 상단 헤더 영역: 스크롤 시 위로 올라감 */}
+        <div className="flex-none p-6 pb-0">
+          <CommonHeader title="나만의 농장 추가하기" onPrev={prevStep} />
 
-          <div className="text-center mt-4 shrink-0">
+          <div className="text-center mt-4">
             <p className="text-b-14m text-gray-500">
               새로운 농장을 등록하고 스마트팜 시스템을 시작하세요.
             </p>
           </div>
-
-          <main
-            className={`flex-1 flex flex-col min-h-0 pt-6 ${step !== 2 ? 'items-center justify-center' : ''}`}
-          >
-            {step === 1 && <Step1 onNext={() => setStep(2)} />}
-            {step === 2 && (
-              <Step2
-                onNext={() => setStep(3)}
-                onPrev={prevStep}
-                farmName={farmName}
-                setFarmName={setFarmName}
-                address={address}
-                setAddress={setAddress}
-                detailAddress={detailAddress}
-                setDetailAddress={setDetailAddress}
-                area={area}
-                setArea={setArea}
-                selectedCrop={selectedCrop}
-                setSelectedCrop={setSelectedCrop}
-                customCrop={customCrop}
-                setCustomCrop={setCustomCrop}
-              />
-            )}
-            {step === 3 && (
-              <Step3
-                onPrev={prevStep}
-                farmData={{
-                  name: farmName,
-                  address: `${address} ${detailAddress}`.trim(),
-                  area: Number(area),
-                  cropName: selectedCrop === '기타' ? customCrop : selectedCrop,
-                }}
-              />
-            )}
-          </main>
         </div>
 
-        {/* 하단 진행률 바 */}
-        <footer className="shrink-0 bg-[#E8E2D5] p-6 flex flex-col gap-6">
+        {/* ✨ 3. 메인 입력 영역: h-auto로 설정해서 내용이 많아지면 푸터를 밀어냄 */}
+        <main
+          className={`flex-1 flex flex-col pt-6 px-6 pb-10 ${
+            step !== 2 ? 'items-center justify-center' : ''
+          } h-auto min-h-fit`}
+        >
+          {step === 1 && <Step1 onNext={() => setStep(2)} />}
+          {step === 2 && (
+            <Step2
+              onNext={() => setStep(3)}
+              onPrev={prevStep}
+              farmName={farmName}
+              setFarmName={setFarmName}
+              address={address}
+              setAddress={setAddress}
+              detailAddress={detailAddress}
+              setDetailAddress={setDetailAddress}
+              area={area}
+              setArea={setArea}
+              selectedCrop={selectedCrop}
+              setSelectedCrop={setSelectedCrop}
+              customCrop={customCrop}
+              setCustomCrop={setCustomCrop}
+            />
+          )}
+          {step === 3 && (
+            <Step3
+              onPrev={prevStep}
+              farmData={{
+                name: farmName,
+                address: `${address} ${detailAddress}`.trim(),
+                area: Number(area),
+                cropName: selectedCrop === '기타' ? customCrop : selectedCrop,
+              }}
+            />
+          )}
+        </main>
+
+        {/* ✨ 4. 하단 진행률 바: 메인 컨텐츠가 끝나면 자연스럽게 등장 */}
+        <footer className="shrink-0 bg-[#E8E2D5] p-6 flex flex-col gap-1">
           <div className="flex flex-col gap-3">
             <div className="w-full h-2.5 bg-white rounded-full relative">
               <div
@@ -132,9 +131,7 @@ const FarmAddPage = () => {
               <span className="font-bold">{Math.round((step / 3) * 100)}%</span>
             </div>
           </div>
-          <div className="text-center text-c-10m text-[#20110A]/40 uppercase tracking-widest font-medium">
-            Smart FARM, Smart US.
-          </div>
+          <Footer />
         </footer>
       </div>
     </div>

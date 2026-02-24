@@ -27,12 +27,16 @@ const FarmList = ({ farms }: Props) => {
         className={`flex gap-4 pb-4 px-2 ${
           farms.length === 0
             ? 'justify-center'
-            : 'overflow-x-auto scrollbar-hide snap-x snap-mandatory'
+            : 'overflow-x-auto scroll snap-x snap-mandatory'
         }`}
       >
         {/* 1. 기존 농장들 */}
         {farms.map((farm) => (
-          <div key={farm.farmId} className="snap-center shrink-0">
+          <div
+            key={farm.farmId}
+            className="snap-center shrink-0 cursor-pointer active:scale-[0.98] transition-transform"
+            onClick={() => navigate(`/farm/${farm.farmId}`)}
+          >
             <FarmCard
               name={farm.name}
               ownerName={farm.ownerName}
