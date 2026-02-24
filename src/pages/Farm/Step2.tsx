@@ -1,21 +1,51 @@
-import { useEffect, useRef, useState } from 'react';
+import {
+  type Dispatch,
+  type SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import type { Address } from 'react-daum-postcode';
 
 import step2Flower from '../../../public/icons/step2Flower.svg';
 import AddressSearchModal from './AddressSearchModal';
 import CropSelector from './CropSelector';
 import FormSection from './FormSection';
+
 interface Step2Props {
   onNext: () => void;
   onPrev: () => void;
+  farmName: string;
+  setFarmName: Dispatch<SetStateAction<string>>;
+  address: string;
+  setAddress: Dispatch<SetStateAction<string>>;
+  detailAddress: string;
+  setDetailAddress: Dispatch<SetStateAction<string>>;
+  area: string;
+  setArea: Dispatch<SetStateAction<string>>;
+  selectedCrop: string;
+  setSelectedCrop: Dispatch<SetStateAction<string>>;
+  customCrop: string;
+  setCustomCrop: Dispatch<SetStateAction<string>>;
 }
-const Step2 = ({ onNext, onPrev }: Step2Props) => {
-  const [selectedCrop, setSelectedCrop] = useState('상추');
-  const [customCrop, setCustomCrop] = useState('');
-  const [address, setAddress] = useState('');
-  const [detailAddress, setDetailAddress] = useState('');
-  const [isPostcodeOpen, setIsPostcodeOpen] = useState(false);
 
+const Step2 = ({
+  onNext,
+  onPrev,
+  farmName,
+  setFarmName,
+  address,
+  setAddress,
+  detailAddress,
+  setDetailAddress,
+  area,
+  setArea,
+  selectedCrop,
+  setSelectedCrop,
+  customCrop,
+  setCustomCrop,
+}: Step2Props) => {
+  const [isPostcodeOpen, setIsPostcodeOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const customInputRef = useRef<HTMLDivElement>(null);
   const detailInputRef = useRef<HTMLInputElement>(null);
@@ -50,7 +80,6 @@ const Step2 = ({ onNext, onPrev }: Step2Props) => {
         ref={scrollRef}
         className="flex-1 overflow-y-auto scroll min-h-0 mb-4 px-1"
       >
-        {/* 헤더 섹션 */}
         <div className="flex items-center gap-6 mb-8 pt-2">
           <div className="w-[100px] h-[100px] bg-[#E8E2D5] rounded-[30px] flex items-center justify-center shrink-0">
             <img src={step2Flower} alt="flower" />
@@ -63,11 +92,12 @@ const Step2 = ({ onNext, onPrev }: Step2Props) => {
           </div>
         </div>
 
-        {/* 입력 필드들 */}
         <div className="space-y-6 mb-3">
           <FormSection label="농장이름">
             <input
               type="text"
+              value={farmName}
+              onChange={(e) => setFarmName(e.target.value)}
               placeholder="농장의 이름을 입력해주세요."
               className="w-full px-5 py-4 rounded-2xl bg-[#E8E2D5]/50 text-c-10m outline-none"
             />
@@ -87,7 +117,7 @@ const Step2 = ({ onNext, onPrev }: Step2Props) => {
                 value={detailAddress}
                 onChange={(e) => setDetailAddress(e.target.value)}
                 placeholder="상세 정보를 입력해주세요."
-                className={`w-full px-5 py-4 rounded-2xl bg-[#F4F1EA] text-c-10m outline-none transition-all duration-300 ${address ? 'opacity-100' : 'opacity-50'}`}
+                className="w-full px-5 py-4 rounded-2xl bg-[#F4F1EA] text-c-10m outline-none transition-all duration-300"
               />
             </div>
           </FormSection>
@@ -95,13 +125,14 @@ const Step2 = ({ onNext, onPrev }: Step2Props) => {
           <FormSection label="면적">
             <input
               type="text"
+              value={area}
+              onChange={(e) => setArea(e.target.value)}
               placeholder="농장의 면적을 입력해주세요."
               className="w-full px-5 py-4 rounded-2xl bg-[#E8E2D5]/50 text-c-10m outline-none"
             />
           </FormSection>
         </div>
 
-        {/* 작물 선택 섹션 */}
         <CropSelector
           selectedCrop={selectedCrop}
           setSelectedCrop={setSelectedCrop}
@@ -111,7 +142,6 @@ const Step2 = ({ onNext, onPrev }: Step2Props) => {
         />
       </div>
 
-      {/* 하단 버튼 */}
       <div className="shrink-0 flex gap-4 pb-6">
         <button
           onClick={onPrev}

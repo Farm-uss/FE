@@ -8,11 +8,19 @@ import step3Bar from '../../../public/icons/step3Bar.svg';
 import farmAddBgImg from '../../../public/img/FarmAddBgImg.svg';
 import Step1 from './Step1';
 import Step2 from './Step2';
-import Step3 from './Step3'; // ✨ Step3 컴포넌트 임포트
+import Step3 from './Step3';
 
 const FarmAddPage = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
+
+  // ✨ 서버 전송용 상태들 (State Lifting)
+  const [farmName, setFarmName] = useState('');
+  const [address, setAddress] = useState('');
+  const [detailAddress, setDetailAddress] = useState('');
+  const [area, setArea] = useState('');
+  const [selectedCrop, setSelectedCrop] = useState('상추');
+  const [customCrop, setCustomCrop] = useState('');
 
   const prevStep = () =>
     step === 1 ? navigate(-1) : setStep((prev) => prev - 1);
@@ -64,15 +72,39 @@ const FarmAddPage = () => {
             </p>
           </div>
 
-          {/* ✨ 중앙 영역: Step2일 때만 정렬을 풀어서 스크롤 보장! */}
           <main
             className={`flex-1 flex flex-col min-h-0 pt-6 ${step !== 2 ? 'items-center justify-center' : ''}`}
           >
             {step === 1 && <Step1 onNext={() => setStep(2)} />}
             {step === 2 && (
-              <Step2 onNext={() => setStep(3)} onPrev={prevStep} />
+              <Step2
+                onNext={() => setStep(3)}
+                onPrev={prevStep}
+                farmName={farmName}
+                setFarmName={setFarmName}
+                address={address}
+                setAddress={setAddress}
+                detailAddress={detailAddress}
+                setDetailAddress={setDetailAddress}
+                area={area}
+                setArea={setArea}
+                selectedCrop={selectedCrop}
+                setSelectedCrop={setSelectedCrop}
+                customCrop={customCrop}
+                setCustomCrop={setCustomCrop}
+              />
             )}
-            {step === 3 && <Step3 onPrev={prevStep} />}
+            {step === 3 && (
+              <Step3
+                onPrev={prevStep}
+                farmData={{
+                  name: farmName,
+                  address: `${address} ${detailAddress}`.trim(),
+                  area: Number(area),
+                  cropName: selectedCrop === '기타' ? customCrop : selectedCrop,
+                }}
+              />
+            )}
           </main>
         </div>
 
@@ -90,7 +122,7 @@ const FarmAddPage = () => {
               >
                 <img
                   src={getStepChar()}
-                  alt={`step ${step} character`}
+                  alt={`step ${step}`}
                   className="w-full h-full object-contain"
                 />
               </div>
