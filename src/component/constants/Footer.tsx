@@ -1,6 +1,6 @@
 const Footer = () => {
   return (
-    <footer className="py-6 px-6 text-center text-c-10m text-[#20110A]/40 uppercase tracking-widest font-medium shrink-0 ">
+    <footer className="py-4 px-6 text-center text-c-10m text-[#20110A]/40 uppercase tracking-widest font-medium shrink-0 ">
       Smart FARM, Smart US.
     </footer>
   );
