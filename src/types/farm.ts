@@ -37,6 +37,7 @@ export interface FarmResponse {
   crops: string[];
   role: string;
   createdDate: string;
+  img: string;
 }
 
 export interface FarmSummary {

@@ -39,6 +39,7 @@ const FarmList = ({ farms }: Props) => {
               extraMemberCount={farm.memberCount}
               location={farm.location}
               cropName={farm.crops[0] || '작물 없음'}
+              img={farm.img}
             />
           </div>
         ))}
