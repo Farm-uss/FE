@@ -27,9 +27,8 @@ const DashboardMain = () => {
           <FarmSummary summary={summary} />
           <hr className="border-[#8B8880] mb-8" />
           <FarmList farms={farms} />
-
-          <Footer />
         </div>
+        <Footer />
       </div>
     </div>
   );

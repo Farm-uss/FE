@@ -1,6 +1,7 @@
 import { Icon } from '@iconify/react';
 
 import Footer from '@/component/constants/Footer';
+import BottomSheetHeader from '@/component/farm/farmDetail/BottomSheetHeader';
 import SensorCard from '@/component/farm/farmDetail/SensorCard';
 
 const FarmDashboard = () => {
@@ -53,15 +54,10 @@ const FarmDashboard = () => {
 
   return (
     <div className="flex-1 flex flex-col items-center bg-[#E6E0D3]/50 rounded-t-[30px] pt-6  w-full">
-      {/* 상단 핸들 바 */}
-      <div className="w-12 h-1 bg-[#8B8880]/40 rounded-full mx-auto mb-4" />
-
-      <div className="text-center mb-6">
-        <h2 className="text-b-16b text-[#20110A]">센서 대쉬보드</h2>
-        <p className="text-c-10m text-[#20110A]/60 mt-1">
-          실시간 농장 환경 데이터를 모니터링하세요.
-        </p>
-      </div>
+      <BottomSheetHeader
+        title="센서 대쉬보드"
+        description="실시간 농장 환경 데이터를 모니터링하세요."
+      />
 
       {/* 시스템 상태 바 */}
       <div

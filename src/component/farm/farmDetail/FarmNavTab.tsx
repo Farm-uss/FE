@@ -18,8 +18,8 @@ const FarmNavTab = () => {
       />
       <MenuIcon
         icon="material-symbols:photo-camera-outline-rounded"
-        onClick={() => navigate(`/farm/${farmId}/photos`)}
-        active={isActive(`/farm/${farmId}/photos`)}
+        onClick={() => navigate(`/farm/${farmId}/streaming`)}
+        active={isActive(`/farm/${farmId}/streaming`)}
       />
       <MenuIcon
         icon="material-symbols:sound-detection-glass-break-rounded"
