@@ -6,6 +6,7 @@ import RootLayout from '@/layouts/RootLayout';
 import FarmAddPage from '@/pages/Farm/FarmAddPage';
 import FarmDashboard from '@/pages/Farm/FarmDashboard';
 import FarmDetailPage from '@/pages/Farm/FarmDetailPage';
+import FarmStreamingPage from '@/pages/Farm/FarmStreamingPage';
 import DashboardMain from '@/pages/home/DashboardMain';
 import LandingMain from '@/pages/home/LandingMain';
 import Login from '@/pages/login/Login';
@@ -48,8 +49,8 @@ const router = createBrowserRouter([
             element: <FarmDashboard />,
           },
           {
-            path: 'photos', // /farm/23/photos
-            element: <div>사진첩 페이지 (준비중)</div>,
+            path: 'streaming', // /farm/23/photos
+            element: <FarmStreamingPage />,
           },
           {
             path: 'analysis', // /farm/23/analysis
