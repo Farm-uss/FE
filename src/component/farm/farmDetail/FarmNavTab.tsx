@@ -26,7 +26,11 @@ const FarmNavTab = () => {
         onClick={() => navigate(`/farm/${farmId}/growthTraking`)}
         active={isActive(`/farm/${farmId}/growthTraking`)}
       />
-      <MenuIcon icon="material-symbols:bug-report" onClick={() => {}} />
+      <MenuIcon
+        icon="material-symbols:bug-report"
+        onClick={() => navigate(`/farm/${farmId}/pestDetection`)}
+        active={isActive(`/farm/${farmId}/pestDetection`)}
+      />
       <MenuIcon
         icon="material-symbols:calendar-view-month-outline"
         onClick={() => {}}
