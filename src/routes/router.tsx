@@ -8,6 +8,7 @@ import FarmDashboard from '@/pages/Farm/FarmDashboard';
 import FarmDetailPage from '@/pages/Farm/FarmDetailPage';
 import FarmStreamingPage from '@/pages/Farm/FarmStreamingPage';
 import GrowthTraking from '@/pages/Farm/GrowthTraking';
+import PestDetection from '@/pages/Farm/PestDetection';
 import DashboardMain from '@/pages/home/DashboardMain';
 import LandingMain from '@/pages/home/LandingMain';
 import Login from '@/pages/login/Login';
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
           {
             path: 'growthTraking',
             element: <GrowthTraking />,
+          },
+          {
+            path: 'pestDetection',
+            element: <PestDetection />,
           },
           // ... 나머지 메뉴 아이콘들에 대응하는 라우트들 추가
         ],
