@@ -7,13 +7,13 @@ import FarmAddPage from '@/pages/Farm/FarmAddPage';
 import FarmDashboard from '@/pages/Farm/FarmDashboard';
 import FarmDetailPage from '@/pages/Farm/FarmDetailPage';
 import FarmStreamingPage from '@/pages/Farm/FarmStreamingPage';
+import GrowthDiary from '@/pages/Farm/GrowthDiary';
 import GrowthTraking from '@/pages/Farm/GrowthTraking';
 import PestDetection from '@/pages/Farm/PestDetection';
 import DashboardMain from '@/pages/home/DashboardMain';
 import LandingMain from '@/pages/home/LandingMain';
 import Login from '@/pages/login/Login';
 import ManageFarmsPage from '@/pages/manage/manage';
-import GrowthDiary from '@/pages/Farm/GrowthDiary';
 
 const router = createBrowserRouter([
   {
