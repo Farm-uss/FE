@@ -24,7 +24,7 @@ const router = createBrowserRouter([
       </Suspense>
     ),
     children: [
-      // 서비스 첫 화면 (헤더 없는 랜딩/스플래시)
+      // 서비스 첫 화면 (헤더 없는 랜딩/스플래시)!
       {
         index: true,
         element: <LandingMain />,
