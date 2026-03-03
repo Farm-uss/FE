@@ -1,4 +1,3 @@
-// component/farm/detail/FarmNavTab.tsx
 import { Icon } from '@iconify/react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
@@ -33,9 +32,13 @@ const FarmNavTab = () => {
       />
       <MenuIcon
         icon="material-symbols:calendar-view-month-outline"
-        onClick={() => {}}
+        onClick={() => navigate(`/farm/${farmId}/growthDiary`)}
+        active={isActive(`/farm/${farmId}/growthDiary`)}
       />
-      <MenuIcon icon="material-symbols:calendar-clock" onClick={() => {}} />
+      <MenuIcon
+        icon="material-symbols:calendar-clock"
+        onClick={() => { }}
+      />
     </nav>
   );
 };
@@ -51,11 +54,10 @@ const MenuIcon = ({
 }) => (
   <button
     onClick={onClick}
-    className={`w-20 h-20 rounded-2xl shrink-0 flex items-center justify-center transition-all ${
-      active
+    className={`w-20 h-20 rounded-2xl shrink-0 flex items-center justify-center transition-all ${active
         ? 'bg-[#8B8880] text-white shadow-md'
         : 'bg-white text-[#8B8880] border border-[#8B8880]/20'
-    }`}
+      }`}
   >
     <Icon icon={icon} className="text-[30px]" />
   </button>

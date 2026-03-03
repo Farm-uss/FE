@@ -13,6 +13,7 @@ import DashboardMain from '@/pages/home/DashboardMain';
 import LandingMain from '@/pages/home/LandingMain';
 import Login from '@/pages/login/Login';
 import ManageFarmsPage from '@/pages/manage/manage';
+import GrowthDiary from '@/pages/Farm/GrowthDiary';
 
 const router = createBrowserRouter([
   {
@@ -62,6 +63,10 @@ const router = createBrowserRouter([
           {
             path: 'pestDetection',
             element: <PestDetection />,
+          },
+          {
+            path: 'growthDiary',
+            element: <GrowthDiary />,
           },
           // ... 나머지 메뉴 아이콘들에 대응하는 라우트들 추가
         ],

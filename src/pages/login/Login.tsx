@@ -3,61 +3,112 @@ import { useNavigate } from 'react-router-dom';
 
 import api from '@/apis/axios';
 import changeProfileBtn from '@/assets/image/login/changeprofile.png';
-import farmusLogo from '@/assets/image/login/farmus.png';
-import ground1 from '@/assets/image/login/ground1.png';
-import ground2 from '@/assets/image/login/ground2.png';
-import kakaoLoginBtn from '@/assets/image/login/kakaologin.png';
-import loginBtn from '@/assets/image/login/login.png';
+import background from '@/assets/image/login/background.png';
 import profileImg from '@/assets/image/login/profile.png';
+
+interface EyeIconProps {
+  visible: boolean;
+  onClick: () => void;
+}
+
+const EyeIcon = ({ visible, onClick }: EyeIconProps) => (
+  <svg
+    onClick={onClick}
+    className="w-[20px] h-[20px] cursor-pointer text-[#9A9A9A]"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    {visible ? (
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+      />
+    ) : (
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"
+      />
+    )}
+    {visible && (
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-1.543 0-3.01-.35-4.343-1.025"
+      />
+    )}
+  </svg>
+);
+
+interface CheckIconProps {
+  checked: boolean;
+  onClick: () => void;
+}
+
+const CheckIcon = ({ checked, onClick }: CheckIconProps) => (
+  <button
+    type="button"
+    onClick={onClick}
+    className={`flex w-[24px] h-[24px] items-center justify-center rounded-[999px] border transition-colors ${checked ? 'bg-[#2A170C] border-[#2A170C]' : 'bg-white border-[#CFC8B8]'
+      }`}
+  >
+    {checked && (
+      <svg
+        className="w-[14px] h-[14px] text-white"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+      </svg>
+    )}
+  </button>
+);
 
 export default function Login() {
   const navigate = useNavigate();
 
   const [isSignup, setIsSignup] = useState(false);
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [name, setName] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+  const [keepLogin, setKeepLogin] = useState(false);
 
-  /* ================= 로그인 ================= */
   const handleLogin = async () => {
     if (!email || !password) {
       alert('이메일과 비밀번호를 입력해주세요.');
       return;
     }
-
     try {
-      const res = await api.post('/auth/login', {
-        email,
-        password,
-      });
-
+      const res = await api.post('/auth/login', { email, password });
       const { accessToken, refreshToken, nickname, id } = res.data;
-
       localStorage.setItem('accessToken', accessToken);
       localStorage.setItem('refreshToken', refreshToken);
       localStorage.setItem('nickname', nickname);
       localStorage.setItem('id', id);
-
       navigate('/home');
     } catch {
       alert('로그인에 실패했습니다.');
     }
   };
 
-  /* ================= 회원가입 ================= */
   const handleSignup = async () => {
     if (!email || !password || !passwordConfirm || !name) {
       alert('모든 항목을 입력해주세요.');
       return;
     }
-
     if (password !== passwordConfirm) {
       alert('비밀번호가 일치하지 않습니다.');
       return;
     }
-
     try {
       await api.post('/auth/signup', {
         email,
@@ -65,7 +116,6 @@ export default function Login() {
         nickname: name,
         phoneNumber: '010-0000-0000',
       });
-
       alert('회원가입이 완료되었습니다.');
       setIsSignup(false);
     } catch {
@@ -73,45 +123,41 @@ export default function Login() {
     }
   };
 
+  const inputClass =
+    'mb-[18px] h-[58px] w-full rounded-[16px] bg-white px-[24px] text-[14px] text-[#333] outline-none placeholder:text-[#9A9A9A]';
+
+  const pwWrapClass =
+    'mb-[18px] flex h-[58px] w-full items-center rounded-[16px] bg-white px-[24px]';
+
   return (
     <div className="pageContainer bg-[#ECE6D9]">
-      {/* 상단 배경 */}
-      <div className="relative bg-[#2A170C]">
-        <img
-          src={farmusLogo}
-          alt="farmus logo"
-          className="absolute left-4 top-4 z-10 w-[92px]"
-          draggable={false}
-        />
-        <img src={ground1} alt="ground1" className="block w-full" />
-        <img src={ground2} alt="ground2" className="block w-full" />
+      <div className="relative bg-[#2A170C] pt-[24px]">
+        <img src={background} alt="background" className="block w-full object-cover" />
       </div>
 
-      {/* 카드 */}
-      <div className="relative -mt-6 rounded-t-[28px] bg-[#ECE6D9] px-6 pt-14 pb-10">
-        {/* 프로필 */}
-        <div className="absolute -top-12 right-4 z-10 flex flex-col items-center gap-2">
-          <img
-            src={profileImg}
-            alt="profile"
-            className="w-[88px]"
-            draggable={false}
-          />
-          {isSignup && (
-            <img
-              src={changeProfileBtn}
-              alt="change profile"
-              className="w-[120px]"
-              draggable={false}
-            />
-          )}
-        </div>
+      <div
+        className={`relative rounded-t-[30px] bg-[#ECE6D9] px-[24px] pb-[40px] transition-all ${isSignup ? '-mt-[110px] pt-[24px]' : '-mt-[24px] pt-[76px]'
+          }`}
+      >
+        {!isSignup && (
+          <div className="absolute -top-[65px] right-[36px] z-10 flex flex-col items-center gap-[8px]">
+            <img src={profileImg} alt="profile" className="w-[100px]" draggable={false} />
+          </div>
+        )}
+
+        {/* ✅ 여기만 가운데 정렬 변경 */}
+        {isSignup && (
+          <div className="mb-[24px] flex justify-center items-center gap-[18px]">
+            <img src={profileImg} alt="profile" className="w-[100px]" draggable={false} />
+            <img src={changeProfileBtn} alt="change" className="w-[160px] cursor-pointer" draggable={false} />
+          </div>
+        )}
 
         <input
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="e-mail"
-          className="mb-5 h-[64px] w-full rounded-[24px] bg-white px-6 text-[15px] outline-none"
+          className={inputClass}
         />
 
         {isSignup && (
@@ -119,70 +165,71 @@ export default function Login() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="name"
-            className="mb-5 h-[64px] w-full rounded-[24px] bg-white px-6 text-[15px] outline-none"
+            className={inputClass}
           />
         )}
 
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="password"
-          className="mb-5 h-[64px] w-full rounded-[24px] bg-white px-6 text-[15px] outline-none"
-        />
+        <div className={pwWrapClass}>
+          <input
+            type={showPassword ? 'text' : 'password'}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="password"
+            className="flex-1 text-[14px] text-[#333] outline-none bg-transparent placeholder:text-[#9A9A9A]"
+          />
+          <EyeIcon visible={showPassword} onClick={() => setShowPassword(!showPassword)} />
+        </div>
 
         {isSignup && (
-          <input
-            type="password"
-            value={passwordConfirm}
-            onChange={(e) => setPasswordConfirm(e.target.value)}
-            placeholder="password confirm"
-            className="mb-5 h-[64px] w-full rounded-[24px] bg-white px-6 text-[15px] outline-none"
-          />
+          <div className={pwWrapClass}>
+            <input
+              type={showPasswordConfirm ? 'text' : 'password'}
+              value={passwordConfirm}
+              onChange={(e) => setPasswordConfirm(e.target.value)}
+              placeholder="password confirm"
+              className="flex-1 text-[14px] text-[#333] outline-none bg-transparent placeholder:text-[#9A9A9A]"
+            />
+            <EyeIcon visible={showPasswordConfirm} onClick={() => setShowPasswordConfirm(!showPasswordConfirm)} />
+          </div>
         )}
 
-        <img
-          src={loginBtn}
-          alt={isSignup ? 'sign up' : 'login'}
-          className="mb-6 block w-full cursor-pointer"
-          draggable={false}
-          onClick={isSignup ? handleSignup : handleLogin}
-        />
-
-        <div className="mb-5 h-px bg-[#CFC8B8]" />
-
-        {!isSignup ? (
-          <div className="mb-7 flex justify-between text-[13px] text-[#8A8A8A]">
-            <span>아이디 찾기</span>
-            <span>비밀번호 재설정</span>
-            <button
-              type="button"
-              onClick={() => setIsSignup(true)}
-              className="text-[#8A8A8A]"
-            >
-              회원가입
-            </button>
+        {!isSignup && (
+          <div
+            className="mb-[24px] ml-[4px] flex items-center cursor-pointer"
+            onClick={() => setKeepLogin(!keepLogin)}
+          >
+            <CheckIcon checked={keepLogin} onClick={() => setKeepLogin(!keepLogin)} />
+            <span className="ml-[8px] text-[14px] text-[#7A7A7A]">로그인 상태 유지</span>
           </div>
+        )}
+
+        {isSignup ? (
+          <button
+            type="button"
+            onClick={handleSignup}
+            className="mb-[28px] h-[58px] w-full rounded-[16px] bg-[#2A170C] text-[18px] font-bold text-white"
+          >
+            SIGN UP
+          </button>
         ) : (
-          <div className="mb-7 text-center">
-            <button
-              type="button"
-              onClick={() => setIsSignup(false)}
-              className="text-[13px] text-[#8A8A8A]"
-            >
-              로그인으로 돌아가기
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={handleLogin}
+            className="mb-[32px] h-[58px] w-full rounded-[16px] bg-[#2A170C] text-[18px] font-bold text-white"
+          >
+            LOG IN
+          </button>
         )}
 
-        <img
-          src={kakaoLoginBtn}
-          alt="kakao login"
-          className="mb-8 block w-full"
-          draggable={false}
-        />
+        <div className="mb-[26px] h-[2px] bg-[#B8B2A6] w-full" />
 
-        <p className="text-center text-[13px] text-[#9A9A9A]">
+        <button
+          className="mb-[44px] h-[58px] w-full rounded-[16px] bg-[#FEE500] text-[20px] font-bold text-[#191919]"
+        >
+          카카오톡으로 시작하기
+        </button>
+
+        <p className="text-[13px] text-center text-[#9A9A9A]">
           Smart FARM, Smart US.
         </p>
       </div>
