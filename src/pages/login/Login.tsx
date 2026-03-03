@@ -145,7 +145,6 @@ export default function Login() {
           </div>
         )}
 
-        {/* ✅ 여기만 가운데 정렬 변경 */}
         {isSignup && (
           <div className="mb-[24px] flex justify-center items-center gap-[18px]">
             <img src={profileImg} alt="profile" className="w-[100px]" draggable={false} />
@@ -222,6 +221,16 @@ export default function Login() {
         )}
 
         <div className="mb-[26px] h-[2px] bg-[#B8B2A6] w-full" />
+
+        {!isSignup && (
+          <div className="mb-[26px] flex justify-center gap-[28px] text-[13px] text-[#9A9A9A]">
+            <button type="button">아이디 찾기</button>
+            <button type="button">비밀번호 재설정</button>
+            <button type="button" onClick={() => setIsSignup(true)}>
+              회원가입
+            </button>
+          </div>
+        )}
 
         <button
           className="mb-[44px] h-[58px] w-full rounded-[16px] bg-[#FEE500] text-[20px] font-bold text-[#191919]"
