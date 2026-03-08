@@ -2,6 +2,7 @@ import { useState } from 'react';
 import FriendAddModal from '../addFriend/FriendAddModal';
 
 interface FarmInfoSectionProps {
+  farmId: number;
   crop: string;
   location: string;
   area: string;
@@ -10,6 +11,7 @@ interface FarmInfoSectionProps {
 }
 
 const FarmInfoSection = ({
+  farmId,
   crop,
   location,
   area,
@@ -63,6 +65,7 @@ const FarmInfoSection = ({
       <FriendAddModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        farmId={farmId}
       />
     </>
   );
