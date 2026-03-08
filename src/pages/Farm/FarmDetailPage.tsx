@@ -12,10 +12,8 @@ const FarmDetailPage = () => {
 
   const { farms, loading, error } = useFarmData();
 
-  // 1. 주소창 ID와 일치하는 농장 찾기
   const farmInfo = farms.find((f) => String(f.farmId) === farmId);
 
-  // 로딩 중이거나 데이터를 찾지 못했을 때 예외 처리
   if (loading)
     return <LoadingSpinner message="농장 정보를 가져오고 있습니다!" />;
   if (error || !farmInfo) {
@@ -38,9 +36,10 @@ const FarmDetailPage = () => {
 
         <div className="px-6 flex-none">
           <FarmInfoSection
+            farmId={farmInfo.farmId}
             crop={farmInfo.crops[0] || '작물 정보 없음'}
             location={farmInfo.location}
-            area="1m²" // 이거 나중에 수정 해야함
+            area={farmInfo.area ? `${farmInfo.area}m²` : "1m²"}
             memberCount={farmInfo.memberCount}
             ownerName={farmInfo.ownerName}
           />
