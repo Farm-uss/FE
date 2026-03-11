@@ -46,7 +46,7 @@ const ManageFriendsPage = () => {
   return (
     <div className="bg-white h-dvh overflow-y-auto flex flex-col">
       <div className="flex-none px-6 pt-6">
-        <CommonHeader title={farmInfo.name} onPrev={() => navigate('/home')} />
+        <CommonHeader title={farmInfo.name} onPrev={() => navigate(-1)} />
       </div>
 
       <div className="flex-1 px-8 pt-6 flex flex-col items-center">
