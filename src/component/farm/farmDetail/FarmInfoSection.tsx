@@ -59,7 +59,7 @@ const FarmInfoSection = ({
             className="text-c-10m text-[#20110A] flex items-center gap-1"
             to={'manage-friends'}
           >
-            친구추가 +
+            친구관리
           </Link>
         </div>
       </section>
