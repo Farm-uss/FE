@@ -20,11 +20,11 @@ export interface FarmAddResponse {
   area: number;
 }
 
-/** 기존 농장 상세 및 요약 정보 */
 export interface Member {
   userId: number;
   userName: string;
   role: 'OWNER' | 'MEMBER';
+  profileImg: string | null; // ✨ 데이터에 있는 프로필 이미지 추가
 }
 
 export interface FarmResponse {
