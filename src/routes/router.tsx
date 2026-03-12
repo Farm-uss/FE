@@ -9,6 +9,7 @@ import FarmDetailPage from '@/pages/Farm/FarmDetailPage';
 import FarmStreamingPage from '@/pages/Farm/FarmStreamingPage';
 import GrowthDiary from '@/pages/Farm/GrowthDiary';
 import GrowthTraking from '@/pages/Farm/GrowthTraking';
+import ManageFriendsPage from '@/pages/Farm/ManageFriendsPage';
 import PestDetection from '@/pages/Farm/PestDetection';
 import DashboardMain from '@/pages/home/DashboardMain';
 import LandingMain from '@/pages/home/LandingMain';
@@ -24,60 +25,31 @@ const router = createBrowserRouter([
       </Suspense>
     ),
     children: [
-      // 서비스 첫 화면 (헤더 없는 랜딩/스플래시)!
-      {
-        index: true,
-        element: <LandingMain />,
-      },
-      //  로그인 페이지 (헤더 없음)
-      {
-        path: 'login',
-        element: <Login />,
-      },
-      // 실제 메인 홈 (헤더 있는 대시보드)
-      {
-        path: 'home',
-        element: <DashboardMain />,
-      },
-      // 4. 추후 늘어날 페이지들 (자동으로 헤더 붙음)
-      {
-        path: 'farm-add',
-        element: <FarmAddPage />,
-      },
+      { index: true, element: <LandingMain /> },
+      { path: 'login', element: <Login /> },
+      { path: 'home', element: <DashboardMain /> },
+      { path: 'farm-add', element: <FarmAddPage /> },
+
+      /* 1. 기존 농장 상세 (탭 메뉴 있음) */
       {
         path: 'farm/:farmId',
-        element: <FarmDetailPage />, // 상단 정보 + 탭 메뉴가 포함된 레이아웃
+        element: <FarmDetailPage />,
         children: [
-          {
-            index: true, // /farm/23 접속 시 기본으로 보여줄 화면
-            element: <FarmDashboard />,
-          },
-          {
-            path: 'streaming', // /farm/23/photos
-            element: <FarmStreamingPage />,
-          },
-          {
-            path: 'growthTraking',
-            element: <GrowthTraking />,
-          },
-          {
-            path: 'pestDetection',
-            element: <PestDetection />,
-          },
-          {
-            path: 'growthDiary',
-            element: <GrowthDiary />,
-          },
-          // ... 나머지 메뉴 아이콘들에 대응하는 라우트들 추가
+          { index: true, element: <FarmDashboard /> },
+          { path: 'streaming', element: <FarmStreamingPage /> },
+          { path: 'growthTraking', element: <GrowthTraking /> },
+          { path: 'pestDetection', element: <PestDetection /> },
+          { path: 'growthDiary', element: <GrowthDiary /> },
         ],
       },
-      // 내 농장 관리
+
       {
-        path: 'manage',
-        element: <ManageFarmsPage />,
+        path: 'farm/:farmId/manage-friends',
+        element: <ManageFriendsPage />,
       },
+
+      { path: 'manage', element: <ManageFarmsPage /> },
     ],
   },
 ]);
-
 export default router;

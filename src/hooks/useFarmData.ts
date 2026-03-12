@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { getMyFarms, getMyFarmsSummary } from '@/apis/farmService';
 import type { FarmResponse, FarmSummary } from '@/types/farm';
@@ -9,28 +9,28 @@ export const useFarmData = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<unknown>(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        // 병렬로 데이터 호출
-        const [farmsData, summaryData] = await Promise.all([
-          getMyFarms(),
-          getMyFarmsSummary(),
-        ]);
+  const refetch = useCallback(async () => {
+    try {
+      setLoading(true);
+      // 병렬로 데이터 호출
+      const [farmsData, summaryData] = await Promise.all([
+        getMyFarms(),
+        getMyFarmsSummary(),
+      ]);
 
-        setFarms(farmsData);
-        setSummary(summaryData);
-      } catch (err) {
-        setError(err);
-        console.error('농장 데이터를 가져오는데 실패했습니다 :', err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
+      setFarms(farmsData);
+      setSummary(summaryData);
+    } catch (err) {
+      setError(err);
+      console.error('농장 데이터를 가져오는데 실패했습니다 :', err);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  return { farms, summary, loading, error };
+  useEffect(() => {
+    refetch(); // 마운트 시 최초 호출
+  }, [refetch]);
+
+  return { farms, summary, loading, error, refetch };
 };

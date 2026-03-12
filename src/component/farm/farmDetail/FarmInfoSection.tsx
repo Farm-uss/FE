@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
+
 import FriendAddModal from '../addFriend/FriendAddModal';
 
 interface FarmInfoSectionProps {
@@ -53,12 +55,12 @@ const FarmInfoSection = ({
               : `${ownerName}님이 열심히 혼자 키우고 있어요!`}
           </span>
 
-          <button
-            onClick={() => setIsModalOpen(true)}
+          <Link
             className="text-c-10m text-[#20110A] flex items-center gap-1"
+            to={'manage-friends'}
           >
-            친구추가 +
-          </button>
+            친구관리
+          </Link>
         </div>
       </section>
 

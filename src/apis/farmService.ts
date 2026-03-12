@@ -51,3 +51,11 @@ export const addFarm = async (
 
   return response.data;
 };
+
+//친구 내보내기
+export const removeFarmMember = async (
+  farmId: number,
+  memberUserId: number,
+): Promise<void> => {
+  await axiosInstance.delete(`/farms/${farmId}/members/${memberUserId}`);
+};
