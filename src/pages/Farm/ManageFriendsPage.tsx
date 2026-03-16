@@ -73,6 +73,7 @@ const ManageFriendsPage = () => {
               key={member.userId}
               member={member}
               onRemove={openDeleteModal}
+              myRole={farmInfo.role}
             />
           ))}
         </div>
