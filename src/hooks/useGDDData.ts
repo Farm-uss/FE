@@ -5,10 +5,14 @@ import type { GDDWindowResponse } from '@/types/farmService';
 
 export const useGDDData = (farmId: number, cropsId: number) => {
   const [data, setData] = useState<GDDWindowResponse[]>([]);
-  const [windowDays, setWindowDays] = useState(3); // 기본 3일치
+  // ✨ 타입을 number | null로 명시해주면 더 안전해!
+  const [windowDays, setWindowDays] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    // ✨ 핵심: windowDays가 null이면 (아무것도 선택 안 함) 함수를 종료해버려!
+    if (windowDays === null) return;
+
     const fetchData = async () => {
       try {
         setLoading(true);
