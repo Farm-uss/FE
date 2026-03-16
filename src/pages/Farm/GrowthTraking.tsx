@@ -13,7 +13,7 @@ const GrowthTracking = () => {
 
       {/* --- 섹션별 분리 --- */}
       <GrowthChartSection />
-      <GrowthDegreeSection />
+      <GrowthDegreeSection farmId={38} cropsId={22} />
 
       <Footer />
     </div>

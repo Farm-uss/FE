@@ -5,6 +5,7 @@ import type {
   FarmResponse,
   FarmSummary,
 } from '@/types/farm';
+import type { GDDWindowResponse } from '@/types/farmService';
 
 import axiosInstance from './axios';
 
@@ -58,4 +59,17 @@ export const removeFarmMember = async (
   memberUserId: number,
 ): Promise<void> => {
   await axiosInstance.delete(`/farms/${farmId}/members/${memberUserId}`);
+};
+
+/** GDD 그래프 데이터 가져오기 */
+export const getGDDWindows = async (
+  farmId: number,
+  cropsId: number,
+  windowDays: number,
+): Promise<GDDWindowResponse[]> => {
+  const response = await axiosInstance.get(
+    `/api/v1/farms/${farmId}/crops/${cropsId}/gdd/windows`,
+    { params: { windowDays } },
+  );
+  return response.data;
 };
