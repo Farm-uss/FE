@@ -264,7 +264,7 @@ export default function Login() {
                 onClick={handleLogin}
                 className="mb-[32px] h-[58px] w-full rounded-[16px] bg-[#2A170C] text-[18px] font-bold text-white"
               >
-                LOG 파IN
+                LOG IN
               </button>
             )}
 
