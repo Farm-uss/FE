@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Footer from '@/component/constants/Footer';
 import BottomSheetHeader from '@/component/farm/farmDetail/BottomSheetHeader';
 import SchedulePng from '@/assets/image/schedule/schedule.png';
