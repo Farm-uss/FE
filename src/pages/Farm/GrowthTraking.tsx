@@ -11,7 +11,7 @@ const GrowthTracking = () => {
         description="실시간으로 내 농장을 확인하세요!"
       />
 
-      {/* --- 섹션별 분리 --- */}
+      {/* --- 섹션별 분리 ----*/}
       <GrowthChartSection />
       <GrowthDegreeSection farmId={38} cropsId={22} />
 
