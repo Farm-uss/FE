@@ -37,7 +37,8 @@ const FarmNavTab = () => {
       />
       <MenuIcon
         icon="material-symbols:calendar-clock"
-        onClick={() => { }}
+        onClick={() => navigate(`/farm/${farmId}/schedule`)}
+        active={isActive(`/farm/${farmId}/schedule`)}
       />
     </nav>
   );
@@ -55,8 +56,8 @@ const MenuIcon = ({
   <button
     onClick={onClick}
     className={`w-20 h-20 rounded-2xl shrink-0 flex items-center justify-center transition-all ${active
-        ? 'bg-[#8B8880] text-white shadow-md'
-        : 'bg-white text-[#8B8880] border border-[#8B8880]/20'
+      ? 'bg-[#8B8880] text-white shadow-md'
+      : 'bg-white text-[#8B8880] border border-[#8B8880]/20'
       }`}
   >
     <Icon icon={icon} className="text-[30px]" />
