@@ -78,11 +78,11 @@ const GrowthDegreeSection = ({
       </div>
 
       <div className="bg-white w-full h-[320px] rounded-[24px] shadow-sm relative flex flex-col p-5 overflow-hidden">
-        {/* 초기 상태: windowDays가 없고 로딩 중도 아닐 때 안내 UI 표시 */}
+        {/* 1. 초기 안내 상태: windowDays가 선택되지 않았을 때 */}
         {!windowDays && !loading ? (
           <div className="flex-1 flex flex-col items-center justify-center gap-4 animate-in fade-in duration-700">
-            <div className="  flex items-center justify-center">
-              <img src={GrowthTrackingGdd} />
+            <div className="flex items-center justify-center">
+              <img src={GrowthTrackingGdd} alt="안내 이미지" />
             </div>
             <div className="text-center">
               <p className="text-b-16b text-[#20110A]">
@@ -94,14 +94,30 @@ const GrowthDegreeSection = ({
             </div>
           </div>
         ) : loading ? (
-          /*  로딩 상태 */
+          /* 2. 로딩 상태: 데이터 요청 중일 때 */
           <LoadingSpinner
             message="최신 데이터 분석 중..."
             fullScreen={false}
             bgColor="bg-white"
           />
+        ) : displayData.length === 0 ? (
+          /* 3. 데이터 없음 상태: 로딩은 끝났는데 데이터가 텅 비었을 때 */
+          <div className="flex-1 flex flex-col items-center justify-center gap-3 animate-in fade-in duration-500">
+            <Icon
+              icon="tabler:database-x"
+              className="text-5xl text-[#20110A]/10"
+            />
+            <div className="text-center">
+              <p className="text-b-14b text-[#20110A]/60">
+                표시할 데이터가 없어요
+              </p>
+              <p className="text-c-12m text-[#20110A]/30 mt-1">
+                작물을 등록한 지 얼마 안 되었을 수 있습니다.
+              </p>
+            </div>
+          </div>
         ) : (
-          /*  그래프 표시 상태 */
+          /* 4. 그래프 표시 상태: 데이터가 존재할 때 */
           <div
             ref={scrollRef}
             className="flex-1 overflow-x-auto hide-scrollbar select-none"
