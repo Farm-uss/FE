@@ -38,7 +38,9 @@ export interface FarmResponse {
   role: string;
   createdDate: string;
   img: string;
-  area?: number; // ✨ 추가: 면적 데이터 대응
+  area?: number;
+  cropCode: string;
+  cropsId: number;
 }
 
 export interface FarmSummary {
