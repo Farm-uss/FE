@@ -11,11 +11,11 @@ const DetectionResultView = ({
 }: DetectionResultViewProps) => {
   return (
     <div
-      className="relative w-full flex flex-col items-center pt-10 pb-16 px-9 animate-in fade-in duration-700 gap-12"
+      className="relative w-full flex flex-col items-center pt-10 pb-20 px-9 animate-in fade-in duration-700 gap-12 min-h-[52.5vh]"
       style={{
         background: isNormal
-          ? 'linear-gradient(180deg, #E8E2D5 0%, #A2B67D 75%, #86A459 91%, #648E2E 100%)'
-          : 'linear-gradient(180deg, #E8E2D5 0%, #B7867A 50%, #8E392E 85%, #7A2F26 100%)',
+          ? 'linear-gradient(180deg, #E8E2D5 0%, #A2B67D 75%, #648E2E 100%)'
+          : 'linear-gradient(180deg, #E8E2D5 0%, #B7867A 50%, #7A2F26 100%)',
       }}
     >
       <div className="text-center z-10">

@@ -5,7 +5,10 @@ import type {
   FarmResponse,
   FarmSummary,
 } from '@/types/farm';
-import type { GDDWindowResponse } from '@/types/farmService';
+import type {
+  GDDWindowResponse,
+  VisionInferenceResponse,
+} from '@/types/farmService';
 
 import axiosInstance from './axios';
 
@@ -70,6 +73,32 @@ export const getGDDWindows = async (
   const response = await axiosInstance.get(
     `/api/v1/farms/${farmId}/crops/${cropsId}/gdd/windows`,
     { params: { windowDays } },
+  );
+  return response.data;
+};
+
+/**
+ * 병해충 AI 추론 API (Multipart 방식)
+ * @param image 실제 File 객체
+ */
+export const postVisionInference = async (
+  farmId: number,
+  cropsId: number,
+  image: File, // ✨ string 대신 File 객체로 변경!
+): Promise<VisionInferenceResponse> => {
+  // 1. FormData 객체 생성 (멀티파트 봉투 만들기)
+  const formData = new FormData();
+  formData.append('image', image); // 백엔드에서 받는 필드명 'image'
+
+  // 2. 요청 보내기 (axios가 FormData를 보고 자동으로 헤더를 설정해줘!)
+  const response = await axiosInstance.post(
+    `/api/v1/farms/${farmId}/crops/${cropsId}/vision-inference`,
+    formData,
+    {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    },
   );
   return response.data;
 };
