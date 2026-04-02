@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom'; // ✨ 이동을 위해 추가
+import { useNavigate, useParams } from 'react-router-dom';
 
 import BottomSheetHeader from '@/component/farm/farmDetail/BottomSheetHeader';
 

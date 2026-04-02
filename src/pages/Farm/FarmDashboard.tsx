@@ -92,13 +92,22 @@ const FarmDashboard = () => {
       </div>
 
       {/* 수동제어 버튼 */}
-      <button
-        className={`${
-          hasSensorError ? 'bg-[#8B2323]' : 'bg-[#6A8B23]'
-        } w-100 h-20 py-4 rounded-2xl text-white text-b-16b shadow-lg active:scale-95 transition-all mb-4`}
-      >
-        수동제어 하러가기
-      </button>
+      <div className=" flex gap-x-3 gap-y-4 mb-8 justify-items-center">
+        <button
+          className={`${
+            hasSensorError ? 'bg-[#8B2323]' : 'bg-[#6A8B23]'
+          } w-70 h-20 py-4 rounded-2xl text-white text-b-16b shadow-lg active:scale-95 transition-all mb-4`}
+        >
+          수동제어 하러가기
+        </button>
+
+        {/* 기기변경 버튼 */}
+        <button
+          className={`bg-[#20110A] w-70 h-20 py-4 rounded-2xl text-white text-b-16b shadow-lg active:scale-95 transition-all mb-4`}
+        >
+          기기변경 하러 가기
+        </button>
+      </div>
       <Footer />
     </div>
   );
