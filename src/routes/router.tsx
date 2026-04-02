@@ -11,6 +11,7 @@ import GrowthDiary from '@/pages/Farm/GrowthDiary';
 import GrowthTraking from '@/pages/Farm/GrowthTraking';
 import ManageFriendsPage from '@/pages/Farm/ManageFriendsPage';
 import PestDetection from '@/pages/Farm/PestDetection';
+import Register from '@/pages/Farm/Register';
 import Schedule from '@/pages/Farm/Schedule';
 import DashboardMain from '@/pages/home/DashboardMain';
 import LandingMain from '@/pages/home/LandingMain';
@@ -42,6 +43,7 @@ const router = createBrowserRouter([
           { path: 'pestDetection', element: <PestDetection /> },
           { path: 'growthDiary', element: <GrowthDiary /> },
           { path: 'schedule', element: <Schedule /> },
+          { path: 'device-register', element: <Register /> },
         ],
       },
 
