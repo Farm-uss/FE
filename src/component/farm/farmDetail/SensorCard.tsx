@@ -16,7 +16,7 @@ const SensorCard = ({ icon, label, value, range }: SensorCardProps) => {
   const isOutOfRange = currentValue < min || currentValue > max;
 
   return (
-    <div className="bg-white rounded-[16px] w-[170px] h-[90px] flex items-center shadow-sm p-4 shrink-0">
+    <div className="bg-white rounded-[16px] w-[175px] h-[90px] flex items-center shadow-sm p-4 shrink-0">
       <div className="flex flex-col items-center justify-center gap-1 w-[60px] shrink-0">
         <Icon icon={icon} className="text-[24px] text-[#20110A]" />
         <span className="text-c-12b text-[#20110A] whitespace-nowrap">
