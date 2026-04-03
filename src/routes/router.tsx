@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
 import RootLayout from '@/layouts/RootLayout';
+import ChatBot from '@/pages/chatBot/ChatBot';
 import FarmAddPage from '@/pages/Farm/FarmAddPage';
 import FarmDashboard from '@/pages/Farm/FarmDashboard';
 import FarmDetailPage from '@/pages/Farm/FarmDetailPage';
@@ -53,6 +54,7 @@ const router = createBrowserRouter([
       },
 
       { path: 'manage', element: <ManageFarmsPage /> },
+      { path: 'chatBot', element: <ChatBot /> },
     ],
   },
 ]);
