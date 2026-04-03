@@ -24,7 +24,7 @@ export const useFarmData = () => {
       // [라즈베리파이 더미 로직 추가]
       const mappedFarms = farmsData.map((farm) => ({
         ...farm,
-        isDeviceRegistered: true, // 일단 전부 기기 없음(false)으로 설정!
+        isDeviceRegistered: true, //false, //true, // 일단 전부 기기 없음(false)으로 설정!
       }));
 
       setFarms(mappedFarms);

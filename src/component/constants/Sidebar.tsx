@@ -68,7 +68,7 @@ const Sidebar = ({ isOpen, onClose, nickname }: Props) => {
                 {
                   icon: 'material-symbols:smart-toy-outline',
                   label: 'AI챗봇',
-                  path: '/chatbot',
+                  path: '/chatBot',
                 },
                 {
                   icon: 'material-symbols:settings-outline',
