@@ -1,4 +1,5 @@
 import { Icon } from '@iconify/react';
+import React from 'react';
 
 import LazyImage from '@/component/constants/LazyImage';
 import { useFarmImage } from '@/hooks/useFarmImage';
@@ -73,4 +74,4 @@ const FarmCard = ({
   );
 };
 
-export default FarmCard;
+export default React.memo(FarmCard);
