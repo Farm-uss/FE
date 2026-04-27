@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Outlet, useNavigate, useParams } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import CommonHeader from '@/component/constants/CommonHeader';
 import LoadingSpinner from '@/component/constants/LoadingSpinner';
@@ -9,13 +9,13 @@ import { useFarmData } from '@/hooks/useFarmData';
 
 const FarmDetailPage = () => {
   const navigate = useNavigate();
+  const location = useLocation(); // 추가
   const { farmId } = useParams();
   const { farms, loading, error } = useFarmData();
-
   const farmInfo = farms.find((f) => String(f.farmId) === farmId);
 
   // 현재 경로가 기기 등록 페이지인지 확인하는 변수
-  const isRegisterPage = window.location.pathname.includes('device-register');
+  const isRegisterPage = location.pathname.includes('device-register'); // 변경
 
   useEffect(() => {
     if (!loading && farmInfo && farmInfo.isDeviceRegistered === false) {
