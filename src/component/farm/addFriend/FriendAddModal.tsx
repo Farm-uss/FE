@@ -23,41 +23,35 @@ const FriendAddModal = ({
 }: FriendAddModalProps) => {
   const [notFound, setNotFound] = useState(false);
   const [email, setEmail] = useState('');
-
+  const [loading, setLoading] = useState(false); // 추가
   if (!isOpen) return null;
 
   const handleAddClick = async () => {
-    if (!email.trim()) return;
+    if (!email.trim() || loading) return; // loading 중엔 중복 클릭 차단
 
     try {
+      setLoading(true); // 추가
       const response = await api.post(`/farms/${farmId}/members`, {
         email: email.trim(),
       });
 
       if (response.status === 200) {
-        if (onSuccess) {
-          onSuccess();
-        }
-
+        if (onSuccess) onSuccess();
         handleClose();
       }
     } catch (error) {
       const axiosError = error as AxiosError;
-
       console.error('친구 추가 실패:', axiosError);
-
-      if (axiosError.response) {
-        console.log('서버 응답 데이터:', axiosError.response.data);
-        console.log('서버 응답 상태:', axiosError.response.status);
-      }
-
       setNotFound(true);
+    } finally {
+      setLoading(false); // 추가
     }
   };
 
   const handleClose = () => {
     setNotFound(false);
     setEmail('');
+    setLoading(false); // 추가
     onClose();
   };
 
@@ -113,7 +107,8 @@ const FriendAddModal = ({
           />
           <button
             onClick={handleAddClick}
-            className="w-[70px] h-[54px] flex items-center justify-center active:scale-95 transition-transform"
+            disabled={loading} // 추가
+            className="w-[70px] h-[54px] flex items-center justify-center active:scale-95 transition-transform disabled:opacity-50" // disabled 스타일 추가
           >
             <img
               src={plusImg}
