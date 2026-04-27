@@ -52,12 +52,13 @@ const Step2 = ({
 
   useEffect(() => {
     if (selectedCrop === '기타' && customInputRef.current) {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         customInputRef.current?.scrollIntoView({
           behavior: 'smooth',
           block: 'center',
         });
       }, 200);
+      return () => clearTimeout(timer); // 추가
     }
   }, [selectedCrop]);
 
@@ -71,9 +72,8 @@ const Step2 = ({
     }
     setAddress(fullAddress);
     setIsPostcodeOpen(false);
-    setTimeout(() => detailInputRef.current?.focus(), 100);
+    setTimeout(() => detailInputRef.current?.focus(), 100); // 이건 괜찮음
   };
-
   return (
     <div className="w-full h-full flex flex-col animate-fadeIn px-2 overflow-hidden relative">
       <div
