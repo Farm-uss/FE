@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import api from '@/apis/axios';
 import profileImg from '@/assets/image/manage/profile.png';
+import LazyImage from '@/component/constants/LazyImage';
 
 type FarmResponse = {
   farmId: number;
@@ -39,13 +40,11 @@ const FarmThumb = ({
 }) => {
   return (
     <div className="relative w-[132px] h-[132px] rounded-[16px] overflow-hidden bg-white shadow-[0_2px_10px_rgba(0,0,0,0.06)] flex-shrink-0">
-      <img
+      <LazyImage
         src={img || profileImg}
         alt="farm"
+        fallback={profileImg}
         className="w-full h-full object-cover"
-        onError={(e) => {
-          e.currentTarget.src = profileImg;
-        }}
       />
 
       <button
@@ -60,7 +59,6 @@ const FarmThumb = ({
     </div>
   );
 };
-
 const FarmManageCard = ({
   farm,
   onDeleteClick,
