@@ -1,29 +1,31 @@
-// src/router.tsx
-import { Suspense } from 'react';
+// src/routes/router.tsx
+import { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
+import LoadingSpinner from '@/component/constants/LoadingSpinner';
 import RootLayout from '@/layouts/RootLayout';
-import ChatBot from '@/pages/chatBot/ChatBot';
-import FarmAddPage from '@/pages/Farm/FarmAddPage';
-import FarmDashboard from '@/pages/Farm/FarmDashboard';
-import FarmDetailPage from '@/pages/Farm/FarmDetailPage';
-import FarmStreamingPage from '@/pages/Farm/FarmStreamingPage';
-import GrowthDiary from '@/pages/Farm/GrowthDiary';
-import GrowthTraking from '@/pages/Farm/GrowthTraking';
-import ManageFriendsPage from '@/pages/Farm/ManageFriendsPage';
-import PestDetection from '@/pages/Farm/PestDetection';
-import Register from '@/pages/Farm/Register';
-import Schedule from '@/pages/Farm/Schedule';
-import DashboardMain from '@/pages/home/DashboardMain';
-import LandingMain from '@/pages/home/LandingMain';
-import Login from '@/pages/login/Login';
-import ManageFarmsPage from '@/pages/manage/manage';
+
+const ChatBot = lazy(() => import('@/pages/chatBot/ChatBot'));
+const FarmAddPage = lazy(() => import('@/pages/Farm/FarmAddPage'));
+const FarmDashboard = lazy(() => import('@/pages/Farm/FarmDashboard'));
+const FarmDetailPage = lazy(() => import('@/pages/Farm/FarmDetailPage'));
+const FarmStreamingPage = lazy(() => import('@/pages/Farm/FarmStreamingPage'));
+const GrowthDiary = lazy(() => import('@/pages/Farm/GrowthDiary'));
+const GrowthTraking = lazy(() => import('@/pages/Farm/GrowthTraking'));
+const ManageFriendsPage = lazy(() => import('@/pages/Farm/ManageFriendsPage'));
+const PestDetection = lazy(() => import('@/pages/Farm/PestDetection'));
+const Register = lazy(() => import('@/pages/Farm/Register'));
+const Schedule = lazy(() => import('@/pages/Farm/Schedule'));
+const DashboardMain = lazy(() => import('@/pages/home/DashboardMain'));
+const LandingMain = lazy(() => import('@/pages/home/LandingMain'));
+const Login = lazy(() => import('@/pages/login/Login'));
+const ManageFarmsPage = lazy(() => import('@/pages/manage/manage'));
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: (
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<LoadingSpinner fullScreen />}>
         <RootLayout />
       </Suspense>
     ),
@@ -33,7 +35,6 @@ const router = createBrowserRouter([
       { path: 'home', element: <DashboardMain /> },
       { path: 'farm-add', element: <FarmAddPage /> },
 
-      /* 1. 기존 농장 상세 (탭 메뉴 있음) */
       {
         path: 'farm/:farmId',
         element: <FarmDetailPage />,
@@ -58,4 +59,5 @@ const router = createBrowserRouter([
     ],
   },
 ]);
+
 export default router;
