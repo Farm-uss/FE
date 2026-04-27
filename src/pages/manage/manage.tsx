@@ -6,6 +6,7 @@ import api from '@/apis/axios';
 import profileImg from '@/assets/image/manage/profile.webp';
 import CommonModal from '@/component/constants/CommonModal';
 import LazyImage from '@/component/constants/LazyImage';
+import LoadingSpinner from '@/component/constants/LoadingSpinner';
 
 type FarmResponse = {
   farmId: number;
@@ -214,7 +215,7 @@ const ManageFarmsPage = () => {
   if (loading) {
     return (
       <div className="w-full min-h-screen flex items-center justify-center">
-        <p className="text-[16px] text-[#7E7366]">불러오는 중...</p>
+        <LoadingSpinner message="농장 정보를 가져오고 있습니다!" />
       </div>
     );
   }
