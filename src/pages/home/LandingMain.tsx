@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import flowerGreen from '../../assets/icons/home/flowerGreen.svg';
@@ -5,9 +6,31 @@ import flowerYellowgreen from '../../assets/icons/home/flowerYellowgreen.svg';
 import mianLogo from '../../assets/image/common/MainLogo.svg';
 import mainImg from '../../assets/image/main/mainImg1.svg';
 
+const IMAGES = [flowerGreen, flowerYellowgreen, mianLogo, mainImg];
+
 const LandingMain = () => {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    let loaded = 0;
+    IMAGES.forEach((src) => {
+      const img = new Image();
+      img.onload = () => {
+        loaded += 1;
+        if (loaded === IMAGES.length) setReady(true);
+      };
+      img.onerror = () => {
+        loaded += 1;
+        if (loaded === IMAGES.length) setReady(true);
+      };
+      img.src = src;
+    });
+  }, []);
+
   return (
-    <div className="pageContainer bg-[#E6E0D3] relative">
+    <div
+      className={`pageContainer bg-[#E6E0D3] relative transition-opacity duration-500 ${ready ? 'opacity-100' : 'opacity-0'}`}
+    >
       {/* 초록색 꽃 */}
       <img
         src={flowerGreen}
