@@ -2,10 +2,9 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import api from '@/apis/axios';
+import background from '@/assets/image/login/background.webp';
 import changeProfileBtn from '@/assets/image/login/changeprofile.png';
-import background from '@/assets/image/login/background.png';
 import profileImg from '@/assets/image/login/profile.png';
-
 import profile1 from '@/assets/image/profile/profile1.png';
 import profile2 from '@/assets/image/profile/profile2.png';
 import profile3 from '@/assets/image/profile/profile3.png';
@@ -51,8 +50,9 @@ const CheckIcon = ({ checked, onClick }: CheckIconProps) => (
   <button
     type="button"
     onClick={onClick}
-    className={`flex w-[24px] h-[24px] items-center justify-center rounded-[999px] border transition-colors ${checked ? 'bg-[#2A170C] border-[#2A170C]' : 'bg-white border-[#CFC8B8]'
-      }`}
+    className={`flex w-[24px] h-[24px] items-center justify-center rounded-[999px] border transition-colors ${
+      checked ? 'bg-[#2A170C] border-[#2A170C]' : 'bg-white border-[#CFC8B8]'
+    }`}
   >
     {checked && (
       <svg
@@ -61,7 +61,12 @@ const CheckIcon = ({ checked, onClick }: CheckIconProps) => (
         viewBox="0 0 24 24"
         stroke="currentColor"
       >
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={3}
+          d="M5 13l4 4L19 7"
+        />
       </svg>
     )}
   </button>
@@ -127,7 +132,8 @@ export default function Login() {
         password,
         nickname: name,
         phoneNumber: '010-1111-1111',
-        profileImageIds: selectedProfile.id === 'default' ? [] : [selectedProfile.id],
+        profileImageIds:
+          selectedProfile.id === 'default' ? [] : [selectedProfile.id],
       });
       alert('회원가입이 완료되었습니다.');
       setIsSignup(false);
@@ -147,23 +153,38 @@ export default function Login() {
   return (
     <div className="pageContainer bg-[#ECE6D9] min-h-screen flex flex-col relative overflow-hidden">
       <div className="relative bg-[#2A170C] pt-[24px]">
-        <img src={background} alt="background" className="block w-full object-cover" />
+        <img
+          src={background}
+          alt="background"
+          className="block w-full object-cover"
+        />
       </div>
 
       <div
-        className={`relative rounded-t-[30px] bg-[#ECE6D9] px-[24px] pb-[40px] transition-all flex-grow flex flex-col ${isSignup ? '-mt-[110px] pt-[24px]' : '-mt-[24px] pt-[76px]'
-          }`}
+        className={`relative rounded-t-[30px] bg-[#ECE6D9] px-[24px] pb-[40px] transition-all flex-grow flex flex-col ${
+          isSignup ? '-mt-[110px] pt-[24px]' : '-mt-[24px] pt-[76px]'
+        }`}
       >
         {!isSignup && (
           <div className="absolute -top-[65px] right-[36px] z-10 flex flex-col items-center gap-[8px]">
-            <img src={profileImg} alt="profile" className="w-[100px]" draggable={false} />
+            <img
+              src={profileImg}
+              alt="profile"
+              className="w-[100px]"
+              draggable={false}
+            />
           </div>
         )}
 
         {isSignup && (
           <div className="mb-[24px] flex justify-center items-center gap-[18px]">
             <div className="w-[100px] h-[100px] rounded-full overflow-hidden bg-white">
-              <img src={selectedProfile.src} alt="profile" className="w-full h-full object-cover" draggable={false} />
+              <img
+                src={selectedProfile.src}
+                alt="profile"
+                className="w-full h-full object-cover"
+                draggable={false}
+              />
             </div>
             <img
               src={changeProfileBtn}
@@ -192,7 +213,11 @@ export default function Login() {
                     ${selectedProfile.id === prof.id ? 'border-[4px] border-[#2A170C]' : 'border-[4px] border-transparent'}
                   `}
                 >
-                  <img src={prof.src} alt={`profile option ${idx + 1}`} className="w-full h-full object-cover" />
+                  <img
+                    src={prof.src}
+                    alt={`profile option ${idx + 1}`}
+                    className="w-full h-full object-cover"
+                  />
                 </div>
               ))}
             </div>
@@ -224,7 +249,10 @@ export default function Login() {
                 placeholder="password"
                 className="flex-1 text-[14px] text-[#333] outline-none bg-transparent placeholder:text-[#9A9A9A]"
               />
-              <EyeIcon visible={showPassword} onClick={() => setShowPassword(!showPassword)} />
+              <EyeIcon
+                visible={showPassword}
+                onClick={() => setShowPassword(!showPassword)}
+              />
             </div>
 
             {isSignup && (
@@ -236,7 +264,10 @@ export default function Login() {
                   placeholder="password confirm"
                   className="flex-1 text-[14px] text-[#333] outline-none bg-transparent placeholder:text-[#9A9A9A]"
                 />
-                <EyeIcon visible={showPasswordConfirm} onClick={() => setShowPasswordConfirm(!showPasswordConfirm)} />
+                <EyeIcon
+                  visible={showPasswordConfirm}
+                  onClick={() => setShowPasswordConfirm(!showPasswordConfirm)}
+                />
               </div>
             )}
 
@@ -245,8 +276,13 @@ export default function Login() {
                 className="mb-[24px] ml-[4px] flex items-center cursor-pointer"
                 onClick={() => setKeepLogin(!keepLogin)}
               >
-                <CheckIcon checked={keepLogin} onClick={() => setKeepLogin(!keepLogin)} />
-                <span className="ml-[8px] text-[14px] text-[#7A7A7A]">로그인 상태 유지</span>
+                <CheckIcon
+                  checked={keepLogin}
+                  onClick={() => setKeepLogin(!keepLogin)}
+                />
+                <span className="ml-[8px] text-[14px] text-[#7A7A7A]">
+                  로그인 상태 유지
+                </span>
               </div>
             )}
 
@@ -286,9 +322,7 @@ export default function Login() {
               </div>
             )}
 
-            <button
-              className="mb-[44px] h-[58px] w-full rounded-[16px] bg-[#FEE500] text-[20px] font-bold text-[#191919]"
-            >
+            <button className="mb-[44px] h-[58px] w-full rounded-[16px] bg-[#FEE500] text-[20px] font-bold text-[#191919]">
               카카오톡으로 시작하기
             </button>
 
@@ -299,7 +333,6 @@ export default function Login() {
         <p className="relative z-10 text-[13px] text-center text-[#9A9A9A] mt-auto">
           Smart FARM, Smart US.
         </p>
-
       </div>
     </div>
   );
