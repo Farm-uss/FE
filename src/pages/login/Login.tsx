@@ -5,10 +5,10 @@ import api from '@/apis/axios';
 import background from '@/assets/image/login/background.webp';
 import changeProfileBtn from '@/assets/image/login/changeprofile.png';
 import profileImg from '@/assets/image/login/profile.png';
-import profile1 from '@/assets/image/profile/profile1.png';
-import profile2 from '@/assets/image/profile/profile2.png';
-import profile3 from '@/assets/image/profile/profile3.png';
-import profile4 from '@/assets/image/profile/profile4.png';
+import profile1 from '@/assets/image/profile/profile1.webp';
+import profile2 from '@/assets/image/profile/profile2.webp';
+import profile3 from '@/assets/image/profile/profile3.webp';
+import profile4 from '@/assets/image/profile/profile4.webp';
 
 interface EyeIconProps {
   visible: boolean;

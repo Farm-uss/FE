@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import api from '@/apis/axios';
-import profileImg from '@/assets/image/manage/profile.png';
+import profileImg from '@/assets/image/manage/profile.webp';
 import LazyImage from '@/component/constants/LazyImage';
 
 type FarmResponse = {
