@@ -1,6 +1,6 @@
 import type { VisionInferenceData } from '@/types/farmService';
 
-import { AccordionItem } from './AccordionItem ';
+import { AccordionItem } from './AccordionItem';
 
 interface Props {
   data: VisionInferenceData;

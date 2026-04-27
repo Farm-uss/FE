@@ -1,5 +1,7 @@
 import { Icon } from '@iconify/react';
+import React from 'react';
 
+import LazyImage from '@/component/constants/LazyImage';
 import { useFarmImage } from '@/hooks/useFarmImage';
 
 interface FarmCardProps {
@@ -10,7 +12,8 @@ interface FarmCardProps {
   cropName: string;
   img: string;
 }
-
+const DEFAULT_IMG =
+  'https://hansungfarmimg.s3.eu-north-1.amazonaws.com/farm/farmBasicImg.svg';
 const FarmCard = ({
   name,
   ownerName,
@@ -26,17 +29,13 @@ const FarmCard = ({
       <div className="flex gap-3 items-start">
         {/* 썸네일 박스 */}
         <div className="w-[80px] h-[80px] bg-white rounded-[13px] shrink-0 overflow-hidden flex items-center justify-center">
-          <img
+          <LazyImage
             src={displaySrc}
             alt={name}
+            fallback={DEFAULT_IMG}
             className="w-full h-full object-cover scale-110 transition-transform duration-300 hover:scale-125"
-            onError={(e) => {
-              (e.currentTarget as HTMLImageElement).src =
-                'https://hansungfarmimg.s3.eu-north-1.amazonaws.com/farm/farmBasicImg.svg';
-            }}
           />
         </div>
-
         {/* 카드 정보 */}
         <div className="flex flex-col gap-2 flex-1 min-w-0 text-left">
           <div className="bg-white h-[42px] rounded-xl px-3 flex items-center gap-2 w-full shadow-sm">
@@ -75,4 +74,4 @@ const FarmCard = ({
   );
 };
 
-export default FarmCard;
+export default React.memo(FarmCard);

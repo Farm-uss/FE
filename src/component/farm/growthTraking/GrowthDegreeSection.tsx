@@ -1,5 +1,5 @@
 import { Icon } from '@iconify/react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Area,
   AreaChart,
@@ -33,15 +33,26 @@ const GrowthDegreeSection = ({
   );
 
   const displayData = data;
-  const chartWidth = Math.max(displayData.length * 60, 350);
+  const chartWidth = useMemo(() => Math.max(data.length * 60, 350), [data]);
 
-  const lastData = data.length > 0 ? data[data.length - 1] : null;
-  const currentGDD = lastData ? lastData.gddCumulative.toFixed(1) : '0';
+  const lastData = useMemo(
+    () => (data.length > 0 ? data[data.length - 1] : null),
+    [data],
+  );
+  const currentGDD = useMemo(
+    () => (lastData ? lastData.gddCumulative.toFixed(1) : '0'),
+    [lastData],
+  );
 
-  const maxVal =
-    data.length > 0 ? Math.max(...data.map((d) => d.gddCumulative)) : 100;
-  const minVal =
-    data.length > 0 ? Math.min(...data.map((d) => d.gddCumulative)) : 0;
+  const maxVal = useMemo(
+    () =>
+      data.length > 0 ? Math.max(...data.map((d) => d.gddCumulative)) : 100,
+    [data],
+  );
+  const minVal = useMemo(
+    () => (data.length > 0 ? Math.min(...data.map((d) => d.gddCumulative)) : 0),
+    [data],
+  );
 
   // 로딩 완료 후 + windowDays가 선택되었을 때만 스크롤 제어
   useEffect(() => {
