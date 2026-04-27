@@ -1,5 +1,5 @@
+import LazyImage from '@/component/constants/LazyImage';
 import type { Member } from '@/types/farm';
-
 interface FriendItemProps {
   member: Member;
   onRemove: (id: number) => void;
@@ -18,7 +18,7 @@ const FriendItem = ({ member, onRemove, myRole }: FriendItemProps) => {
         }`}
       >
         {member.profileImg ? (
-          <img
+          <LazyImage
             src={member.profileImg}
             alt={member.userName}
             className="w-full h-full object-cover"
