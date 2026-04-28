@@ -30,19 +30,19 @@ export default defineConfig(({ mode }) => ({
         background_color: '#E6E0D3', // 앱 실행 시 스플래시 화면 배경색
         icons: [
           {
-            src: 'IconPwa.svg',
+            src: 'IconPwa1.png',
             sizes: '192x192',
-            type: 'image/svg+xml',
+            type: 'image/png',
           },
           {
-            src: 'IconPwa.svg',
+            src: 'IconPwa2.png',
             sizes: '512x512',
-            type: 'image/svg+xml',
+            type: 'image/png',
           },
           {
-            src: 'IconPwa.svg',
+            src: 'IconPwa2.png',
             sizes: '512x512',
-            type: 'image/svg+xml',
+            type: 'image/png',
             purpose: 'maskable',
           },
         ],
