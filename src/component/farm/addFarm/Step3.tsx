@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { addFarm } from '@/apis/farmService';
 import CommonModal from '@/component/constants/CommonModal';
 import LoadingSpinner from '@/component/constants/LoadingSpinner';
+import { storage } from '@/utils/storage';
 
 import basicFarmImg from '../../../assets/icons/common/farmBasicImg.svg';
 
@@ -20,7 +21,7 @@ interface Step3Props {
 
 const Step3 = ({ onPrev, farmData }: Step3Props) => {
   const navigate = useNavigate();
-  const nickname = localStorage.getItem('nickname');
+  const nickname = storage.getNickname();
   const [showModal, setShowModal] = useState(false);
   const [previewImg, setPreviewImg] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);

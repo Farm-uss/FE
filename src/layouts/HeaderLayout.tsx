@@ -3,10 +3,11 @@ import { Outlet } from 'react-router-dom';
 
 import Header from '@/component/constants/Header';
 import Sidebar from '@/component/constants/Sidebar';
+import { storage } from '@/utils/storage';
 
 const HeaderLayout = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const nickname = localStorage.getItem('nickname') || '동열';
+  const nickname = storage.getNickname() || '닉네임';
 
   return (
     <div className="flex flex-col h-full overflow-hidden">

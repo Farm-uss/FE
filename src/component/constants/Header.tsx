@@ -1,6 +1,8 @@
 import { Icon } from '@iconify/react';
 import { Link, useNavigate } from 'react-router-dom';
 
+import { storage } from '@/utils/storage';
+
 import HeaderIcon from '../../assets/icons/common/HedartIcon.svg';
 
 interface Props {
@@ -10,7 +12,7 @@ interface Props {
 const Header = ({ onMenuClick }: Props) => {
   const navigate = useNavigate();
 
-  const isLoggedIn = !!localStorage.getItem('accessToken');
+  const isLoggedIn = !!storage.getAccessToken();
 
   return (
     <div className="w-full h-[52px] bg-[#E8E2D5] flex items-center justify-between px-6 shadow-[0_2px_4px_rgba(0,0,0,0.1)]">

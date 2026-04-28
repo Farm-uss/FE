@@ -1,6 +1,10 @@
 // components/common/Sidebar.tsx
 import { Icon } from '@iconify/react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import CommonModal from '@/component/constants/CommonModal';
+import { storage } from '@/utils/storage';
 
 import sidebarImg from '../../assets/image/gnb/rightGnbImg.svg';
 
@@ -12,23 +16,27 @@ interface Props {
 
 const Sidebar = ({ isOpen, onClose, nickname }: Props) => {
   const navigate = useNavigate();
+  const [logoutModalOpen, setLogoutModalOpen] = useState(false);
 
   const handleMenuClick = (path: string, label: string) => {
     if (label === '로그아웃') {
-      if (!window.confirm('로그아웃 하시겠어요?')) return;
-      localStorage.removeItem('nickname');
-      localStorage.removeItem('accessToken');
-      onClose();
-      navigate('/login');
+      setLogoutModalOpen(true); // window.confirm 대신 모달 열기
       return;
     }
     navigate(path);
     onClose();
   };
 
+  const handleLogoutConfirm = () => {
+    storage.clearAuth();
+    setLogoutModalOpen(false);
+    onClose();
+    navigate('/login');
+  };
+
   return (
     <>
-      {/* 1. 배경 어둡게 (fixed에서 absolute로 변경) */}
+      {/* 배경 */}
       <div
         className={`absolute top-[52px] left-0 right-0 bottom-0 bg-black/30 z-40 transition-opacity duration-300 ${
           isOpen ? 'opacity-100 visible' : 'opacity-0 invisible'
@@ -36,7 +44,7 @@ const Sidebar = ({ isOpen, onClose, nickname }: Props) => {
         onClick={onClose}
       />
 
-      {/* 2. 사이드바 내용 (absolute로 변경하여 컨테이너 안에 가둠) */}
+      {/* 사이드바 */}
       <aside
         className={`absolute top-[52px] right-0 h-[calc(100%-52px)] w-[70%] bg-white z-45 transform transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
@@ -111,6 +119,17 @@ const Sidebar = ({ isOpen, onClose, nickname }: Props) => {
           </div>
         </div>
       </aside>
+
+      {/* 로그아웃 확인 모달 */}
+      <CommonModal
+        isOpen={logoutModalOpen}
+        onClose={() => setLogoutModalOpen(false)}
+        onConfirm={handleLogoutConfirm}
+        title="로그아웃 하시겠어요?"
+        buttonText="로그아웃"
+        showCancel
+        cancelText="취소"
+      />
     </>
   );
 };

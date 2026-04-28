@@ -9,6 +9,7 @@ import profile1 from '@/assets/image/profile/profile1.webp';
 import profile2 from '@/assets/image/profile/profile2.webp';
 import profile3 from '@/assets/image/profile/profile3.webp';
 import profile4 from '@/assets/image/profile/profile4.webp';
+import { storage } from '@/utils/storage';
 
 interface EyeIconProps {
   visible: boolean;
@@ -105,10 +106,10 @@ export default function Login() {
     try {
       const res = await api.post('/auth/login', { email, password });
       const { accessToken, refreshToken, nickname, id } = res.data;
-      localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
-      localStorage.setItem('nickname', nickname);
-      localStorage.setItem('id', id);
+      storage.setAccessToken(accessToken);
+      storage.setRefreshToken(refreshToken);
+      storage.setNickname(nickname);
+      storage.setId(id);
 
       navigate('/home');
     } catch {

@@ -4,10 +4,11 @@ import DashboardHeader from '@/component/home/DashboardHeader';
 import FarmList from '@/component/home/FarmList';
 import FarmSummary from '@/component/home/FarmSummary';
 import { useFarmData } from '@/hooks/useFarmData';
+import { storage } from '@/utils/storage';
 
 const DashboardMain = () => {
   const { farms, summary, loading } = useFarmData();
-  const nickname = localStorage.getItem('nickname') || '닉네임';
+  const nickname = storage.getNickname() || '닉네임';
 
   if (loading) {
     return <LoadingSpinner message="농장 정보를 가져오고 있습니다!" />;
