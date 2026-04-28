@@ -7,6 +7,7 @@ import type {
 } from '@/types/farm';
 import type {
   GDDWindowResponse,
+  OptimalRangeResponse,
   VisionInferenceResponse,
 } from '@/types/farmService';
 
@@ -84,7 +85,7 @@ export const getGDDWindows = async (
 export const postVisionInference = async (
   farmId: number,
   cropsId: number,
-  image: File, // ✨ string 대신 File 객체로 변경!
+  image: File,
 ): Promise<VisionInferenceResponse> => {
   // 1. FormData 객체 생성 (멀티파트 봉투 만들기)
   const formData = new FormData();
@@ -100,5 +101,12 @@ export const postVisionInference = async (
       },
     },
   );
+  return response.data;
+};
+
+export const getFarmOptimalRange = async (
+  farmId: number,
+): Promise<OptimalRangeResponse> => {
+  const response = await axiosInstance.get(`/api/v1/farms/${farmId}/dashboard`);
   return response.data;
 };
