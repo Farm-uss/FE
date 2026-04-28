@@ -48,3 +48,22 @@ export interface VisionInferenceResponse {
   code: string;
   data: VisionInferenceData;
 }
+
+//적정 범위 데이터
+export interface OptimalRangeSensor {
+  label: string;
+  unit: string;
+  min: number;
+  max: number;
+}
+
+export interface OptimalRangeResponse {
+  cropName: string;
+  cropCode: string;
+  temperature: OptimalRangeSensor;
+  ph: OptimalRangeSensor;
+  soilMoisture: OptimalRangeSensor;
+  co2: OptimalRangeSensor;
+  ec: OptimalRangeSensor;
+  illuminance: OptimalRangeSensor;
+}

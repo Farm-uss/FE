@@ -8,12 +8,14 @@ interface SensorCardProps {
 }
 
 const SensorCard = ({ icon, label, value, range }: SensorCardProps) => {
-  // 1. 숫자만 추출하는 함수
   const currentValue = parseFloat(value.replace(/[^0-9.]/g, ''));
   const [min, max] = range.split('~').map((v) => parseFloat(v));
-
-  // 2. 범위를 벗어났는지 확인 (미달이거나 초과일 때)
   const isOutOfRange = currentValue < min || currentValue > max;
+
+  // value에서 숫자부분과 단위 분리 (예: "- mS/cm" → "-", "mS/cm")
+  const parts = value.trim().split(' ');
+  const numPart = parts[0]; // "-" 또는 "25"
+  const unitPart = parts.slice(1).join(' '); // "mS/cm" 또는 "°C"
 
   return (
     <div className="bg-white rounded-[16px] w-[175px] h-[90px] flex items-center shadow-sm p-4 shrink-0">
@@ -29,11 +31,21 @@ const SensorCard = ({ icon, label, value, range }: SensorCardProps) => {
           isOutOfRange ? 'bg-[#FEE2E2]' : 'bg-[#E6E0D3]'
         }`}
       >
-        <span
-          className={`text-h-24b leading-none ${isOutOfRange ? 'text-[#8E2E2E]' : 'text-[#20110A]'}`}
-        >
-          {value}
-        </span>
+        {/* 숫자 + 단위 분리 표시 */}
+        <div className="flex items-baseline gap-0.5">
+          <span
+            className={`text-h-18b leading-none ${isOutOfRange ? 'text-[#8E2E2E]' : 'text-[#20110A]'}`}
+          >
+            {numPart}
+          </span>
+          {unitPart && (
+            <span
+              className={`text-c-12m ${isOutOfRange ? 'text-[#8E2E2E]' : 'text-[#20110A]'}`}
+            >
+              {unitPart}
+            </span>
+          )}
+        </div>
         <span className="text-c-10m text-[#20110A]/60 mt-1 whitespace-nowrap">
           최적 {range}
         </span>
