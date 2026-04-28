@@ -6,6 +6,8 @@ import type {
   FarmSummary,
 } from '@/types/farm';
 import type {
+  GDDSummaryData,
+  GDDSummaryResponse,
   GDDWindowResponse,
   OptimalRangeResponse,
   VisionInferenceResponse,
@@ -76,6 +78,17 @@ export const getGDDWindows = async (
     { params: { windowDays } },
   );
   return response.data;
+};
+
+/** GDD 요약 데이터 가져오기 */
+export const getGDDSummary = async (
+  farmId: number,
+  cropsId: number,
+): Promise<GDDSummaryData> => {
+  const response = await axiosInstance.get<GDDSummaryResponse>(
+    `/api/v1/farms/${farmId}/crops/${cropsId}/gdd/summary`,
+  );
+  return response.data.data;
 };
 
 /**
