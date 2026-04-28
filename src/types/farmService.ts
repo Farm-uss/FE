@@ -1,3 +1,4 @@
+//gdd 사계열
 export interface GDDWindowResponse {
   from: string;
   to: string;
@@ -5,25 +6,38 @@ export interface GDDWindowResponse {
   gddSum: number;
   gddCumulative: number;
 }
+//gdd 요약
+export interface GDDSummaryData {
+  farmId: number;
+  cropsId: number;
+  targetDays: number | null; // null 가능
+  currentDays: number;
+  expectedHarvestDate: string | null; // null 가능
+  targetGdd: number;
+  currentGdd: number;
+  gddStatus: string;
+  message: string;
+}
+export interface GDDSummaryResponse {
+  success: boolean;
+  code: string;
+  data: GDDSummaryData;
+}
 
-/**
- * 병해충 AI 추론 요청 바디 (Request Body)
- */
+//병해충 AI 추론 요청 바디 (Request Body)
 export interface VisionInferenceRequest {
   image: string;
 }
 
-/**
- * 병해충 AI 추론 쿼리 파라미터 (Query Parameters)
- */
+//병해충 AI 추론 쿼리 파라미터 (Query Parameters)
+
 export interface VisionInferenceParams {
   cameraId?: number;
   measuredAt?: string; // ISO 8601 형식 (e.g. 2026-03-30T03:09:29.078Z)
 }
 
-/**
- * 병해충 AI 추론 상세 데이터 (Response Data)
- */
+//병해충 AI 추론 상세 데이터 (Response Data)
+
 export interface VisionInferenceData {
   diseaseStatus: number; // 병해 상태 (예: 0-정상, 1-주의, 2-위험 등)
   diseaseId: string; // 병해 고유 ID (예: "a7")
@@ -40,9 +54,8 @@ export interface VisionInferenceData {
   inferredAt: string; // 추론 완료 시점 (ISO 8601)
 }
 
-/**
- * 병해충 AI 추론 전체 응답 구조 (API Response)
- */
+//병해충 AI 추론 전체 응답 구조 (API Response)
+
 export interface VisionInferenceResponse {
   success: boolean;
   code: string;
