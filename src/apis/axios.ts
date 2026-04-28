@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+import { storage } from '@/utils/storage';
+
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   withCredentials: true,
@@ -10,7 +12,7 @@ const axiosInstance = axios.create({
 
 /* ===================== 토큰 재발급 ===================== */
 const requestNewTokens = async () => {
-  const refreshToken = localStorage.getItem('refreshToken');
+  const refreshToken = storage.getRefreshToken();
   if (!refreshToken) throw new Error('No refresh token');
 
   const res = await axios.get(
@@ -28,8 +30,8 @@ const requestNewTokens = async () => {
 
   const { accessToken, refreshToken: newRefresh } = res.data.result;
 
-  localStorage.setItem('accessToken', accessToken);
-  localStorage.setItem('refreshToken', newRefresh);
+  storage.setAccessToken(accessToken);
+  storage.setRefreshToken(newRefresh);
 
   return accessToken;
 };
@@ -37,7 +39,7 @@ const requestNewTokens = async () => {
 /* ===================== 요청 인터셉터 ===================== */
 axiosInstance.interceptors.request.use(
   (config) => {
-    const accessToken = localStorage.getItem('accessToken');
+    const accessToken = storage.getAccessToken();
 
     if (accessToken && config.headers) {
       config.headers.Authorization = `Bearer ${accessToken}`;
@@ -54,7 +56,6 @@ axiosInstance.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // 🔥 401 OR 403 모두 토큰 만료로 간주
     if (
       (error.response?.status === 401 || error.response?.status === 403) &&
       !originalRequest._retry
@@ -70,8 +71,7 @@ axiosInstance.interceptors.response.use(
 
         return axiosInstance(originalRequest);
       } catch (refreshError) {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
+        storage.clearAuth();
         window.location.href = '/login';
         return Promise.reject(refreshError);
       }

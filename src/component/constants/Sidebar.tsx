@@ -2,6 +2,8 @@
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 
+import { storage } from '@/utils/storage';
+
 import sidebarImg from '../../assets/image/gnb/rightGnbImg.svg';
 
 interface Props {
@@ -16,8 +18,7 @@ const Sidebar = ({ isOpen, onClose, nickname }: Props) => {
   const handleMenuClick = (path: string, label: string) => {
     if (label === '로그아웃') {
       if (!window.confirm('로그아웃 하시겠어요?')) return;
-      localStorage.removeItem('nickname');
-      localStorage.removeItem('accessToken');
+      storage.clearAuth();
       onClose();
       navigate('/login');
       return;
