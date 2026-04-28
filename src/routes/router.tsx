@@ -4,6 +4,7 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import LoadingSpinner from '@/component/constants/LoadingSpinner';
 import RootLayout from '@/layouts/RootLayout';
+import NotificationPage from '@/pages/notification/NotificationPage';
 
 const ChatBot = lazy(() => import('@/pages/chatBot/ChatBot'));
 const FarmAddPage = lazy(() => import('@/pages/Farm/FarmAddPage'));
@@ -56,6 +57,7 @@ const router = createBrowserRouter([
 
       { path: 'manage', element: <ManageFarmsPage /> },
       { path: 'chatBot', element: <ChatBot /> },
+      { path: 'notifications', element: <NotificationPage /> },
     ],
   },
 ]);
