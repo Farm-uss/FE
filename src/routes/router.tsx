@@ -21,6 +21,7 @@ const DashboardMain = lazy(() => import('@/pages/home/DashboardMain'));
 const LandingMain = lazy(() => import('@/pages/home/LandingMain'));
 const Login = lazy(() => import('@/pages/login/Login'));
 const ManageFarmsPage = lazy(() => import('@/pages/manage/manage'));
+const MyProfilePage = lazy(() => import('@/pages/mypage/MyProfilePage'));
 
 const router = createBrowserRouter([
   {
@@ -58,6 +59,7 @@ const router = createBrowserRouter([
       { path: 'manage', element: <ManageFarmsPage /> },
       { path: 'chatBot', element: <ChatBot /> },
       { path: 'notifications', element: <NotificationPage /> },
+      { path: 'mypage', element: <MyProfilePage /> },
     ],
   },
 ]);
