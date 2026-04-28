@@ -15,7 +15,7 @@ import { useGDDData } from '@/hooks/useGDDData';
 
 import GrowthTrackingGdd from '../../../../src/assets/image/growthTraking/growthTrackingGdd.svg';
 import GDDHelpModal from './GDDHelpModal';
-import { InfoCard } from './InfoCard';
+import GDDSummaryCards from './GDDSummaryCards';
 
 const GrowthDegreeSection = ({
   farmId,
@@ -34,15 +34,6 @@ const GrowthDegreeSection = ({
 
   const displayData = data;
   const chartWidth = useMemo(() => Math.max(data.length * 60, 350), [data]);
-
-  const lastData = useMemo(
-    () => (data.length > 0 ? data[data.length - 1] : null),
-    [data],
-  );
-  const currentGDD = useMemo(
-    () => (lastData ? lastData.gddCumulative.toFixed(1) : '0'),
-    [lastData],
-  );
 
   const maxVal = useMemo(
     () =>
@@ -82,11 +73,7 @@ const GrowthDegreeSection = ({
         </button>
       </div>
 
-      <div className="flex gap-3 w-full">
-        <InfoCard label="목표 생장 도일" value="500일" />
-        <InfoCard label="현재 누적 도일" value={`${currentGDD}일`} />
-        <InfoCard label="예상 수확일" value="3월 25일" />
-      </div>
+      <GDDSummaryCards farmId={farmId} cropsId={cropsId} />
 
       <div className="bg-white w-full h-[320px] rounded-[24px] shadow-sm relative flex flex-col p-5 overflow-hidden">
         {/* 1. 초기 안내 상태: windowDays가 선택되지 않았을 때 */}
