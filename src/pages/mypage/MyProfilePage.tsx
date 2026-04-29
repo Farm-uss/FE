@@ -1,9 +1,12 @@
 import { Icon } from '@iconify/react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { updateProfileImage } from '@/apis/userService';
 import CommonHeader from '@/component/constants/CommonHeader';
 import LazyImage from '@/component/constants/LazyImage';
 import LoadingSpinner from '@/component/constants/LoadingSpinner';
+import ProfileSelectSheet from '@/component/constants/ProfileSelectSheet';
 import { useMyProfile } from '@/hooks/useMyProfile';
 
 interface InfoRowProps {
@@ -11,6 +14,7 @@ interface InfoRowProps {
   value?: string;
   actionLabel?: string;
 }
+
 const InfoRow = ({ label, value, actionLabel }: InfoRowProps) => (
   <div className="flex items-center justify-between py-4 border-b border-[#F3EFE6]">
     <span className="text-b-14m text-[#8B8880] w-28 shrink-0">{label}</span>
@@ -25,7 +29,18 @@ const InfoRow = ({ label, value, actionLabel }: InfoRowProps) => (
 
 const MyProfilePage = () => {
   const navigate = useNavigate();
-  const { data, loading } = useMyProfile();
+  const { data, loading, refetch } = useMyProfile();
+  const [isProfileSelectOpen, setIsProfileSelectOpen] = useState(false);
+
+  const handleProfileSelect = async (profile: { src: string; id: string }) => {
+    try {
+      await updateProfileImage(profile.id);
+      setIsProfileSelectOpen(false);
+      refetch();
+    } catch {
+      alert('프로필 이미지 변경에 실패했습니다.');
+    }
+  };
 
   if (loading) return <LoadingSpinner fullScreen />;
 
@@ -37,13 +52,26 @@ const MyProfilePage = () => {
 
       {/* 프로필 이미지 + 닉네임 */}
       <div className="flex flex-col items-center pt-8 pb-8">
-        <div className="w-[100px] h-[100px] rounded-full overflow-hidden bg-[#E8E2D5]">
-          <LazyImage
-            src={data?.profileImageUrl ?? ''}
-            alt="프로필 이미지"
-            className="w-full h-full object-cover"
-          />
-        </div>
+        <button
+          className="relative w-[100px] h-[100px] active:scale-95 transition-transform"
+          onClick={() => setIsProfileSelectOpen(true)}
+        >
+          <div className="w-full h-full rounded-full overflow-hidden bg-[#E8E2D5]">
+            <LazyImage
+              src={data?.profileImageUrl ?? ''}
+              alt="프로필 이미지"
+              className="w-full h-full object-cover"
+            />
+          </div>
+          {/* 카메라 아이콘 뱃지 */}
+          <div className="absolute bottom-0 right-0 w-[28px] h-[28px] rounded-full bg-[#20110A] flex items-center justify-center">
+            <Icon
+              icon="material-symbols:camera-alt"
+              className="text-[14px] text-white"
+            />
+          </div>
+        </button>
+
         <div className="flex items-center gap-2 mt-4">
           <span className="text-h-20b text-[#20110A]">{data?.nickname}</span>
           <button className="active:scale-90 transition-transform">
@@ -59,9 +87,8 @@ const MyProfilePage = () => {
       <div className="h-4 bg-[#F3EFE6]" />
 
       {/* 기본정보 */}
-      <div className="px-6 pt-6 flex flex-col gap-6">
-        <h2 className="text-h-20b text-[#20110A]">기본정보</h2>
-
+      <div className="px-6 pt-6 flex flex-col">
+        <h2 className="text-h-20b text-[#20110A] mb-2">기본정보</h2>
         <InfoRow label="이름" value={data?.nickname} />
         <InfoRow
           label="휴대폰번호"
@@ -70,6 +97,15 @@ const MyProfilePage = () => {
         />
         <InfoRow label="이메일주소" value={data?.email} actionLabel="수정" />
       </div>
+
+      {/* 프로필 선택 시트 */}
+      {isProfileSelectOpen && (
+        <ProfileSelectSheet
+          selectedId={undefined}
+          onSelect={handleProfileSelect}
+          onClose={() => setIsProfileSelectOpen(false)}
+        />
+      )}
     </div>
   );
 };

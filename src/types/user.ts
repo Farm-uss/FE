@@ -13,3 +13,12 @@ export interface UserProfileResponse {
   data: UserProfile;
   message: string | null;
 }
+
+export interface ProfileOption {
+  src: string;
+  id: string;
+}
+
+export interface UpdateProfileImageRequest {
+  image: string;
+}
