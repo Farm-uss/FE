@@ -4,10 +4,12 @@ import { useNavigate } from 'react-router-dom';
 
 import { updateProfileImage } from '@/apis/userService';
 import CommonHeader from '@/component/constants/CommonHeader';
+import CommonModal from '@/component/constants/CommonModal';
 import LazyImage from '@/component/constants/LazyImage';
 import LoadingSpinner from '@/component/constants/LoadingSpinner';
 import ProfileSelectSheet from '@/component/constants/ProfileSelectSheet';
 import { useMyProfile } from '@/hooks/useMyProfile';
+import type { ProfileOption } from '@/types/user';
 
 interface InfoRowProps {
   label: string;
@@ -31,14 +33,32 @@ const MyProfilePage = () => {
   const navigate = useNavigate();
   const { data, loading, refetch } = useMyProfile();
   const [isProfileSelectOpen, setIsProfileSelectOpen] = useState(false);
+  const [modal, setModal] = useState<{
+    isOpen: boolean;
+    title: string;
+    description: string;
+  }>({
+    isOpen: false,
+    title: '',
+    description: '',
+  });
 
-  const handleProfileSelect = async (profile: { src: string; id: string }) => {
+  const handleProfileSelect = async (profile: ProfileOption) => {
     try {
       await updateProfileImage(profile.id);
       setIsProfileSelectOpen(false);
       refetch();
+      setModal({
+        isOpen: true,
+        title: '변경 완료',
+        description: '프로필 이미지가 변경되었습니다.',
+      });
     } catch {
-      alert('프로필 이미지 변경에 실패했습니다.');
+      setModal({
+        isOpen: true,
+        title: '변경 실패',
+        description: '프로필 이미지 변경에 실패했습니다.\n다시 시도해주세요.',
+      });
     }
   };
 
@@ -63,7 +83,6 @@ const MyProfilePage = () => {
               className="w-full h-full object-cover"
             />
           </div>
-          {/* 카메라 아이콘 뱃지 */}
           <div className="absolute bottom-0 right-0 w-[28px] h-[28px] rounded-full bg-[#20110A] flex items-center justify-center">
             <Icon
               icon="material-symbols:camera-alt"
@@ -98,7 +117,6 @@ const MyProfilePage = () => {
         <InfoRow label="이메일주소" value={data?.email} actionLabel="수정" />
       </div>
 
-      {/* 프로필 선택 시트 */}
       {isProfileSelectOpen && (
         <ProfileSelectSheet
           selectedId={undefined}
@@ -106,6 +124,13 @@ const MyProfilePage = () => {
           onClose={() => setIsProfileSelectOpen(false)}
         />
       )}
+
+      <CommonModal
+        isOpen={modal.isOpen}
+        onClose={() => setModal((prev) => ({ ...prev, isOpen: false }))}
+        title={modal.title}
+        description={modal.description}
+      />
     </div>
   );
 };
