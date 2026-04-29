@@ -8,7 +8,7 @@ export const getMyProfile = async (): Promise<UserProfile> => {
   return response.data.data;
 };
 
-/** 프로필 이미지 변경 */
+/** 프로필 이미지 변경 api*/
 export const updateProfileImage = async (imageId: string): Promise<void> => {
   await axiosInstance.post('/auth/profile/image', { image: imageId });
 };
