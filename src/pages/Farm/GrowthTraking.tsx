@@ -27,7 +27,7 @@ const GrowthTracking = () => {
       />
 
       {/* --- 섹션별 분리 ----*/}
-      <GrowthChartSection />
+      <GrowthChartSection farmId={farmId} cropsId={cropsId} />
 
       {/*  실제 ID 넘기기! */}
       <GrowthDegreeSection farmId={farmId} cropsId={cropsId} />

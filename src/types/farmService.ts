@@ -80,3 +80,18 @@ export interface OptimalRangeResponse {
   ec: OptimalRangeSensor;
   illuminance: OptimalRangeSensor;
 }
+
+//성장 지표 시계열
+// 성장 지표 타입
+export type GrowthMetricType =
+  | 'LEAF_COUNT'
+  | 'FRUIT_COUNT'
+  | 'SIZE_CM'
+  | 'HEIGHT_CM';
+
+export interface GrowthMetricData {
+  date: string;
+  value: number;
+  source: string;
+  imageId: number | null;
+}
