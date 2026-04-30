@@ -9,6 +9,8 @@ import type {
   GDDSummaryData,
   GDDSummaryResponse,
   GDDWindowResponse,
+  GrowthMetricData,
+  GrowthMetricType,
   OptimalRangeResponse,
   VisionInferenceResponse,
 } from '@/types/farmService';
@@ -90,7 +92,19 @@ export const getGDDSummary = async (
   );
   return response.data.data;
 };
-
+/** 성장 지표 시계열 데이터 가져오기 */
+export const getGrowthMetrics = async (
+  farmId: number,
+  cropsId: number,
+  metric: GrowthMetricType,
+  windowDays?: number,
+): Promise<GrowthMetricData[]> => {
+  const response = await axiosInstance.get(
+    `/api/v1/farms/${farmId}/crops/${cropsId}/growth-metrics`,
+    { params: { metric, ...(windowDays && { windowDays }) } },
+  );
+  return response.data;
+};
 /**
  * 병해충 AI 추론 API (Multipart 방식)
  * @param image 실제 File 객체
