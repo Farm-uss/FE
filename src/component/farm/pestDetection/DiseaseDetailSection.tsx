@@ -7,7 +7,9 @@ interface Props {
 }
 
 const DiseaseDetailSection = ({ data }: Props) => {
-  const confidencePercent = `${data.confidence}%`;
+  // confidence는 0~100 범위 (타입 주석 기준)
+  // Math.round로 소수점 방지
+  const confidencePercent = `${Math.round(data.confidence)}%`;
 
   return (
     <div className="w-full flex flex-col gap-8 mt-10 pb-10 animate-in fade-in slide-in-from-bottom-5 duration-1000">
@@ -24,7 +26,7 @@ const DiseaseDetailSection = ({ data }: Props) => {
         </div>
       </div>
 
-      {/* --- 질병 요약 --- */}
+      {/* 질병 요약 */}
       <div className="flex flex-col gap-5">
         <h3 className="text-h-20b text-[#20110A]">{data.diseaseName}?</h3>
         <p className="text-b-14m text-[#20110A] leading-relaxed decoration-2 underline-offset-4">
