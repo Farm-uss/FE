@@ -22,7 +22,7 @@ const LandingMain = lazy(() => import('@/pages/home/LandingMain'));
 const Login = lazy(() => import('@/pages/login/Login'));
 const ManageFarmsPage = lazy(() => import('@/pages/manage/manage'));
 const MyProfilePage = lazy(() => import('@/pages/mypage/MyProfilePage'));
-
+const RemoteControl = lazy(() => import('@/pages/Farm/RemoteControl'));
 const router = createBrowserRouter([
   {
     path: '/',
@@ -48,6 +48,7 @@ const router = createBrowserRouter([
           { path: 'growthDiary', element: <GrowthDiary /> },
           { path: 'schedule', element: <Schedule /> },
           { path: 'device-register', element: <Register /> },
+          { path: 'remoteControl', element: <RemoteControl /> },
         ],
       },
 

@@ -1,7 +1,7 @@
 // src/pages/Farm/FarmDashboard.tsx
 import { Icon } from '@iconify/react';
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import Footer from '@/component/constants/Footer';
 import InputModal from '@/component/constants/InputModal';
@@ -21,6 +21,7 @@ const SENSOR_ICONS: Record<string, string> = {
 };
 
 const FarmDashboard = () => {
+  const navigate = useNavigate();
   const { farmId } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { data, loading } = useFarmOptimalRange(farmId);
@@ -89,9 +90,13 @@ const FarmDashboard = () => {
 
       {/* 버튼 영역 */}
       <div className="flex gap-3 mb-8 w-full px-9 items-center">
-        <button className="bg-[#6A8B23] w-full max-w-[320px] h-20 py-4 rounded-2xl text-white text-b-16b shadow-lg active:scale-95 transition-all">
+        <button
+          onClick={() => navigate('remoteControl')}
+          className="bg-[#6A8B23] w-full max-w-[320px] h-20 py-4 rounded-2xl text-white text-b-16b shadow-lg active:scale-95 transition-all"
+        >
           수동제어 하러가기
         </button>
+
         <button
           onClick={() => setIsModalOpen(true)}
           className="bg-[#20110A] w-full max-w-[320px] py-4 h-20 rounded-2xl text-white text-b-16b shadow-lg active:scale-95 transition-all"
