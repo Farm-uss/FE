@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
 import { postVisionInference } from '@/apis/farmService';
+import CommonModal from '@/component/constants/CommonModal';
 import BottomSheetHeader from '@/component/farm/farmDetail/BottomSheetHeader';
 import DetectionLoadingView from '@/component/farm/pestDetection/DetectionLoadingView';
 import DetectionResultView from '@/component/farm/pestDetection/DetectionResultView';
@@ -16,6 +17,7 @@ const PestDetection = () => {
 
   const [status, setStatus] = useState<'start' | 'loading' | 'result'>('start');
   const [result, setResult] = useState<VisionInferenceData | null>(null);
+  const [isErrorOpen, setIsErrorOpen] = useState(false);
 
   const handleImageInference = async (imageFile: File) => {
     setStatus('loading');
@@ -32,7 +34,7 @@ const PestDetection = () => {
       }
     } catch (err) {
       console.error('분석 실패:', err);
-      alert('분석 중 오류가 발생했습니다! 다시 시도해주세요.');
+      setIsErrorOpen(true);
       setStatus('start');
     }
   };
@@ -49,7 +51,6 @@ const PestDetection = () => {
       <div className="flex-1 w-full h-full flex flex-col items-center justify-center overflow-y-auto scroll-none">
         {status === 'start' && (
           <div className="px-9 w-full">
-            {/* CHECK 버튼 누르면 사진 찍기 실행 */}
             <DetectionStartView onImageUpload={handleImageInference} />
           </div>
         )}
@@ -62,21 +63,36 @@ const PestDetection = () => {
 
         {status === 'result' && result && (
           <div className="w-full flex flex-col items-center">
-            {/* 서버 결과 기반 UI */}
             <DetectionResultView
               isNormal={result.diseaseStatus === 0}
               diseaseName={result.diseaseName}
             />
 
-            {/* 정상이 아닐 때만 상세 정보 표시 */}
             {result.diseaseStatus !== 0 && (
               <div className="w-full shrink-0 px-9">
                 <DiseaseDetailSection data={result} />
               </div>
             )}
+
+            <button
+              onClick={() => {
+                setResult(null);
+                setStatus('start');
+              }}
+              className="mt-6 mb-10 w-[180px] h-[54px] bg-[#20110A] text-white rounded-[14px] text-b-16sb active:scale-95 transition-transform shadow-lg"
+            >
+              다시 분석하기
+            </button>
           </div>
         )}
       </div>
+
+      <CommonModal
+        isOpen={isErrorOpen}
+        onClose={() => setIsErrorOpen(false)}
+        title="분석 실패"
+        description={'분석 중 오류가 발생했습니다.\n다시 시도해주세요.'}
+      />
     </div>
   );
 };
