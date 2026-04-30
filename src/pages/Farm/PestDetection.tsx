@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
 import { postVisionInference } from '@/apis/farmService';
@@ -19,25 +19,32 @@ const PestDetection = () => {
   const [result, setResult] = useState<VisionInferenceData | null>(null);
   const [isErrorOpen, setIsErrorOpen] = useState(false);
 
-  const handleImageInference = async (imageFile: File) => {
-    setStatus('loading');
-    try {
-      const response = await postVisionInference(
-        farmInfo.farmId,
-        farmInfo.cropsId,
-        imageFile,
-      );
+  const handleImageInference = useCallback(
+    async (imageFile: File) => {
+      setStatus('loading');
+      try {
+        const response = await postVisionInference(
+          farmInfo.farmId,
+          farmInfo.cropsId,
+          imageFile,
+        );
 
-      if (response.success) {
-        setResult(response.data);
-        setStatus('result');
+        if (response.success) {
+          setResult(response.data);
+          setStatus('result');
+        } else {
+          // success가 false로 오는 경우 처리
+          setIsErrorOpen(true);
+          setStatus('start');
+        }
+      } catch (err) {
+        console.error('분석 실패:', err);
+        setIsErrorOpen(true);
+        setStatus('start');
       }
-    } catch (err) {
-      console.error('분석 실패:', err);
-      setIsErrorOpen(true);
-      setStatus('start');
-    }
-  };
+    },
+    [farmInfo.farmId, farmInfo.cropsId],
+  );
 
   return (
     <div className="flex-1 flex flex-col items-center rounded-t-[30px] w-full overflow-hidden transition-all duration-700 bg-[#E6E0D3]">
