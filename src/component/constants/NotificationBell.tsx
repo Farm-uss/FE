@@ -34,6 +34,16 @@ const NotificationBell = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    const handler = () => {
+      getUnreadCount()
+        .then(setUnreadCount)
+        .catch(() => {});
+    };
+    window.addEventListener('notification-read', handler);
+    return () => window.removeEventListener('notification-read', handler);
+  }, []);
+
   return (
     <div className="relative" ref={dropdownRef}>
       <button

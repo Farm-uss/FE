@@ -73,6 +73,7 @@ const NotificationPage = () => {
                   if (!noti.read) {
                     await readNotification(noti.id).catch(() => {});
                     markAsRead(noti.id);
+                    window.dispatchEvent(new Event('notification-read')); // ← 추가
                   }
                   navigate(`/farm/${noti.farmId}`);
                 }}

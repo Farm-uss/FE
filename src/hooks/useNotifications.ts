@@ -77,6 +77,7 @@ export const useNotifications = () => {
   const markAllAsRead = async () => {
     await readAllNotifications();
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+    window.dispatchEvent(new Event('notification-read')); // ← 추가
   };
   return {
     notifications,
