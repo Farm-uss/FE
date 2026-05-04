@@ -12,6 +12,9 @@ export default defineConfig(({ mode }) => ({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
+      strategies: 'injectManifest', // ← 추가
+      srcDir: 'src', // ← 추가
+      filename: 'sw.ts', // ← 추가
       injectRegister: 'script-defer',
       devOptions: {
         enabled: mode === 'development',
