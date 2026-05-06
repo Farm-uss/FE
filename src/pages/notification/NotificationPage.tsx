@@ -1,6 +1,7 @@
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 
+import axiosInstance from '@/apis/axios';
 import { readNotification } from '@/apis/notificationService';
 import alaramIcon from '@/assets/icons/common/alarmIcon.svg';
 import LoadingSpinner from '@/component/constants/LoadingSpinner';
@@ -27,6 +28,10 @@ const NotificationPage = () => {
   } = useNotifications();
   const unreadCount = notifications.filter((n) => !n.read).length;
 
+  const handleTestPush = async () => {
+    await axiosInstance.post('/api/push/test').catch(() => {});
+  };
+
   return (
     <div className="pageContainer bg-white flex flex-col">
       <div className="flex items-center justify-between px-5 pt-6 pb-4">
@@ -42,14 +47,22 @@ const NotificationPage = () => {
           </button>
           <h1 className="text-[24px] font-bold text-[#20110A]">알림</h1>
         </div>
-        {unreadCount > 0 && (
+        <div className="flex items-center gap-3">
+          {unreadCount > 0 && (
+            <button
+              onClick={markAllAsRead}
+              className="text-c-12m text-[#20110A]/40 active:scale-90 transition-transform"
+            >
+              모두 읽음
+            </button>
+          )}
           <button
-            onClick={markAllAsRead}
-            className="text-c-12m text-[#20110A]/40 active:scale-90 transition-transform"
+            onClick={handleTestPush}
+            className="text-c-12m text-[#648E2E] active:scale-90 transition-transform"
           >
-            모두 읽음
+            테스트 푸시
           </button>
-        )}
+        </div>
       </div>
 
       {/* 목록 */}
@@ -73,7 +86,7 @@ const NotificationPage = () => {
                   if (!noti.read) {
                     await readNotification(noti.id).catch(() => {});
                     markAsRead(noti.id);
-                    window.dispatchEvent(new Event('notification-read')); // ← 추가
+                    window.dispatchEvent(new Event('notification-read'));
                   }
                   navigate(`/farm/${noti.farmId}`);
                 }}
