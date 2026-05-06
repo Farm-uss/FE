@@ -9,6 +9,7 @@ import profile1 from '@/assets/image/profile/profile1.webp';
 import profile2 from '@/assets/image/profile/profile2.webp';
 import profile3 from '@/assets/image/profile/profile3.webp';
 import profile4 from '@/assets/image/profile/profile4.webp';
+import { usePushNotification } from '@/hooks/usePushNotification';
 import { storage } from '@/utils/storage';
 
 interface EyeIconProps {
@@ -75,7 +76,7 @@ const CheckIcon = ({ checked, onClick }: CheckIconProps) => (
 
 export default function Login() {
   const navigate = useNavigate();
-
+  const { subscribe } = usePushNotification();
   const [isSignup, setIsSignup] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -110,7 +111,7 @@ export default function Login() {
       storage.setRefreshToken(refreshToken);
       storage.setNickname(nickname);
       storage.setId(id);
-
+      await subscribe();
       navigate('/home');
     } catch {
       alert('로그인에 실패했습니다.');
