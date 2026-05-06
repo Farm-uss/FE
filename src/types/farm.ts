@@ -18,6 +18,7 @@ export interface FarmAddResponse {
   myRole: string;
   createdAt: string;
   area: number;
+  deviceId: number;
 }
 
 export interface Member {
