@@ -47,7 +47,7 @@ const PestDetection = () => {
   );
 
   return (
-    <div className="flex-1 flex flex-col items-center rounded-t-[30px] w-full overflow-hidden transition-all duration-700 bg-[#E6E0D3]">
+    <div className="flex-1 flex flex-col items-center rounded-t-[30px] w-full overflow-hidden transition-all duration-700 bg-[#E6E0D3]/50">
       <div className="w-full py-6 px-9 flex flex-col gap-6 shrink-0 z-10">
         <BottomSheetHeader
           title="병해충 분석"
