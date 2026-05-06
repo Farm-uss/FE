@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 
 import CommonHeader from '@/component/constants/CommonHeader';
 import Footer from '@/component/constants/Footer';
+import CropRecommendModal from '@/component/farm/addFarm/CropRecommendModal';
+import type { CropRecommendResponse } from '@/types/cropRecommend';
 
 import step1Bar from '../../assets/icons/farmAdd/step1Bar.svg';
 import step2Bar from '../../assets/icons/farmAdd/step2Bar.svg';
@@ -16,13 +18,16 @@ const FarmAddPage = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
 
-  // ✨ 서버 전송용 상태들 (State Lifting)
   const [farmName, setFarmName] = useState('');
   const [address, setAddress] = useState('');
   const [detailAddress, setDetailAddress] = useState('');
   const [area, setArea] = useState('');
   const [selectedCrop, setSelectedCrop] = useState('상추');
   const [customCrop, setCustomCrop] = useState('');
+
+  const [cropRecommendResult, setCropRecommendResult] =
+    useState<CropRecommendResponse | null>(null);
+  const [showRecommendModal, setShowRecommendModal] = useState(false);
 
   const prevStep = () =>
     step === 1 ? navigate(-1) : setStep((prev) => prev - 1);
@@ -41,13 +46,11 @@ const FarmAddPage = () => {
   };
 
   return (
-    /* ✨ 1. 부모 컨테이너: 화면 높이 고정 및 배경 처리 */
     <div
       className={`relative pageContainer h-dvh overflow-hidden transition-colors duration-500 ${
         step === 1 ? 'bg-transparent' : 'bg-white'
       }`}
     >
-      {/* 1단계 배경 이미지: absolute로 고정해서 내용만 스크롤 되게 함 */}
       <div
         className={`absolute inset-0 z-0 transition-opacity duration-700 ${
           step === 1 ? 'opacity-80' : 'opacity-0 invisible'
@@ -56,12 +59,9 @@ const FarmAddPage = () => {
         <img src={farmAddBgImg} alt="" className="w-full h-full object-cover" />
       </div>
 
-      {/* ✨ 2. 실제 스크롤이 일어나는 통: 형이 만든 .scroll 클래스 적용 */}
       <div className="relative z-10 flex flex-col h-full overflow-y-auto overflow-x-hidden scroll">
-        {/* 상단 헤더 영역: 스크롤 시 위로 올라감 */}
         <div className="flex-none p-6 pb-0">
           <CommonHeader title="나만의 농장 추가하기" onPrev={prevStep} />
-
           <div className="text-center mt-4">
             <p className="text-b-14m text-gray-500">
               새로운 농장을 등록하고 스마트팜 시스템을 시작하세요.
@@ -69,13 +69,22 @@ const FarmAddPage = () => {
           </div>
         </div>
 
-        {/* ✨ 3. 메인 입력 영역: h-auto로 설정해서 내용이 많아지면 푸터를 밀어냄 */}
         <main
           className={`flex-1 flex flex-col pt-6 px-6 pb-10 ${
             step !== 2 ? 'items-center justify-center' : ''
           } h-auto min-h-fit`}
         >
-          {step === 1 && <Step1 onNext={() => setStep(2)} />}
+          {step === 1 && (
+            <Step1
+              onNext={(useAi, result) => {
+                if (useAi && result) {
+                  setCropRecommendResult(result);
+                  setShowRecommendModal(true);
+                }
+                setStep(2);
+              }}
+            />
+          )}
           {step === 2 && (
             <Step2
               onNext={() => setStep(3)}
@@ -107,7 +116,6 @@ const FarmAddPage = () => {
           )}
         </main>
 
-        {/* ✨ 4. 하단 진행률 바: 메인 컨텐츠가 끝나면 자연스럽게 등장 */}
         <footer className="shrink-0 bg-[#E8E2D5] p-6 flex flex-col gap-1">
           <div className="flex flex-col gap-3">
             <div className="w-full h-2.5 bg-white rounded-full relative">
@@ -134,6 +142,14 @@ const FarmAddPage = () => {
           <Footer />
         </footer>
       </div>
+
+      {cropRecommendResult && (
+        <CropRecommendModal
+          isOpen={showRecommendModal}
+          onClose={() => setShowRecommendModal(false)}
+          result={cropRecommendResult}
+        />
+      )}
     </div>
   );
 };
