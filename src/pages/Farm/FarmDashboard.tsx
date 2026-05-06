@@ -1,15 +1,18 @@
 // src/pages/Farm/FarmDashboard.tsx
 import { Icon } from '@iconify/react';
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import Footer from '@/component/constants/Footer';
 import InputModal from '@/component/constants/InputModal';
 import LoadingSpinner from '@/component/constants/LoadingSpinner';
 import BottomSheetHeader from '@/component/farm/farmDetail/BottomSheetHeader';
 import SensorCard from '@/component/farm/farmDetail/SensorCard';
+import { useEnvData } from '@/hooks/useEnvData';
 import { useFarmOptimalRange } from '@/hooks/useFarmOptimalRange';
-import type { OptimalRangeSensor } from '@/types/farmService';
+import type { EnvData, OptimalRangeSensor } from '@/types/farmService';
+
+import type { FarmDetailContext } from './GrowthTraking';
 
 const SENSOR_ICONS: Record<string, string> = {
   temperature: 'material-symbols:thermometer',
@@ -20,11 +23,29 @@ const SENSOR_ICONS: Record<string, string> = {
   illuminance: 'material-symbols:light-mode-outline',
 };
 
+const getEnvValue = (key: string, env: EnvData): string => {
+  const map: Record<string, number> = {
+    temperature: env.temp,
+    soilMoisture: env.soilMoisture,
+    ph: env.ph,
+    illuminance: env.illuminance,
+    ec: env.ec,
+    co2: env.co2,
+  };
+  const val = map[key];
+  return val !== undefined ? String(val) : '-';
+};
+
 const FarmDashboard = () => {
   const navigate = useNavigate();
-  const { farmId } = useParams();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { data, loading } = useFarmOptimalRange(farmId);
+
+  const { farmInfo } = useOutletContext<FarmDetailContext>();
+  const farmId = farmInfo.farmId;
+  const deviceId = farmInfo.deviceId;
+
+  const { data, loading } = useFarmOptimalRange(String(farmId));
+  const { data: envData } = useEnvData(deviceId);
 
   const sensors = data
     ? Object.entries(data)
@@ -34,16 +55,20 @@ const FarmDashboard = () => {
           return {
             icon: SENSOR_ICONS[key],
             label: s.label,
-            value: `- ${s.unit}`,
+            value: envData
+              ? `${getEnvValue(key, envData)} ${s.unit}`
+              : `- ${s.unit}`,
             range: `${s.min}~${s.max}`,
           };
         })
     : [];
 
+  const isDeviceNull = deviceId === null;
   const isError = false;
 
   const handleConfirmChange = (newDeviceId: string) => {
-    console.log('새로운 기기 ID:', newDeviceId);
+    console.log('기기변경 요청:', newDeviceId);
+    // 추후 기기변경 API 연동 시 구현
   };
 
   if (loading) return <LoadingSpinner message="대시보드 불러오는 중..." />;
@@ -58,25 +83,33 @@ const FarmDashboard = () => {
       {/* 시스템 상태 바 */}
       <div className="w-full px-9 mb-6">
         <div
-          className={`${isError ? 'bg-[#8E2E2E]' : 'bg-[#648E2E]'} rounded-lg p-3 flex justify-between items-center transition-colors duration-300 w-full`}
+          className={`${isDeviceNull ? 'bg-[#8B8880]' : isError ? 'bg-[#8E2E2E]' : 'bg-[#648E2E]'} rounded-lg p-3 flex justify-between items-center transition-colors duration-300 w-full`}
         >
           <div className="flex items-center gap-2 text-white">
             <Icon
               icon={
-                isError
-                  ? 'material-symbols:error-outline-rounded'
-                  : 'material-symbols:check-circle-outline-rounded'
+                isDeviceNull
+                  ? 'material-symbols:device-unknown-outline'
+                  : isError
+                    ? 'material-symbols:error-outline-rounded'
+                    : 'material-symbols:check-circle-outline-rounded'
               }
               className="text-[22px]"
             />
             <span className="text-c-12b">
-              시스템 센서 {isError ? '작동 비정상' : '정상 작동중'}
+              {isDeviceNull
+                ? '기기 미연결'
+                : isError
+                  ? '작동 비정상'
+                  : '정상 작동중'}
             </span>
           </div>
           <span className="text-c-10m text-white/80">
-            {isError
-              ? '센서 작동에 오류가 있습니다.'
-              : '모든 센서가 정상적으로 작동 중입니다.'}
+            {isDeviceNull
+              ? '기기변경 버튼으로 기기를 등록해주세요.'
+              : isError
+                ? '센서 작동에 오류가 있습니다.'
+                : '모든 센서가 정상적으로 작동 중입니다.'}
           </span>
         </div>
       </div>
@@ -94,14 +127,14 @@ const FarmDashboard = () => {
           onClick={() => navigate('remoteControl')}
           className="bg-[#6A8B23] w-full max-w-[320px] h-20 py-4 rounded-2xl text-white text-b-16b shadow-lg active:scale-95 transition-all"
         >
-          수동제어 하러가기
+          수동제어
         </button>
 
         <button
           onClick={() => setIsModalOpen(true)}
           className="bg-[#20110A] w-full max-w-[320px] py-4 h-20 rounded-2xl text-white text-b-16b shadow-lg active:scale-95 transition-all"
         >
-          기기변경 하러 가기
+          기기변경
         </button>
       </div>
 

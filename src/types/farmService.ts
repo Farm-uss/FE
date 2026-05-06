@@ -95,3 +95,23 @@ export interface GrowthMetricData {
   source: string;
   imageId: number | null;
 }
+
+// 환경 센서 실시간 데이터
+export interface EnvData {
+  envDataId: number;
+  temp: number;
+  soilMoisture: number;
+  ph: number;
+  illuminance: number;
+  ec: number;
+  co2: number;
+  deviceId: number;
+  measuredAt: string;
+  createdAt: string;
+}
+
+export interface EnvDataResponse {
+  result: string;
+  data: EnvData;
+  message: string | null;
+}

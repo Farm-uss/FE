@@ -9,6 +9,7 @@ export interface FarmDetailContext {
   farmInfo: {
     farmId: number;
     cropsId: number;
+    deviceId: number;
   };
 }
 
