@@ -24,7 +24,7 @@ const SENSOR_ICONS: Record<string, string> = {
 };
 
 const getEnvValue = (key: string, env: EnvData): string => {
-  const map: Record<string, number> = {
+  const map: Record<string, number | null> = {
     temperature: env.temp,
     soilMoisture: env.soilMoisture,
     ph: env.ph,
@@ -33,7 +33,8 @@ const getEnvValue = (key: string, env: EnvData): string => {
     co2: env.co2,
   };
   const val = map[key];
-  return val !== undefined ? String(val) : '-';
+  if (val === null || val === undefined) return '-';
+  return String(val);
 };
 
 const FarmDashboard = () => {
