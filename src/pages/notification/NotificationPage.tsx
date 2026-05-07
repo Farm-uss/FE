@@ -29,7 +29,12 @@ const NotificationPage = () => {
   const unreadCount = notifications.filter((n) => !n.read).length;
 
   const handleTestPush = async () => {
-    await axiosInstance.post('/api/push/test').catch(() => {});
+    try {
+      await axiosInstance.post('/api/push/test');
+      console.log('테스트 푸시 성공');
+    } catch (err) {
+      console.error('테스트 푸시 실패:', err);
+    }
   };
 
   return (
