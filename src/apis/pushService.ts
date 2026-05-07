@@ -6,7 +6,12 @@ export const getPushPublicKey = async (): Promise<string> => {
   return res.data.publicKey;
 };
 
-/** 구독 정보 서버에 저장 */
+const toBase64Url = (buffer: ArrayBuffer): string =>
+  btoa(String.fromCharCode(...new Uint8Array(buffer)))
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '');
+
 export const sendPushSubscription = async (
   sub: PushSubscription,
 ): Promise<void> => {
@@ -14,7 +19,7 @@ export const sendPushSubscription = async (
   const auth = sub.getKey('auth');
   await axiosInstance.post('/api/push/subscribe', {
     endpoint: sub.endpoint,
-    p256dh: key ? btoa(String.fromCharCode(...new Uint8Array(key))) : '',
-    auth: auth ? btoa(String.fromCharCode(...new Uint8Array(auth))) : '',
+    p256dh: key ? toBase64Url(key) : '',
+    auth: auth ? toBase64Url(auth) : '',
   });
 };
