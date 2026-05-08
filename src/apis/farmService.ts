@@ -6,6 +6,7 @@ import type {
   FarmSummary,
 } from '@/types/farm';
 import type {
+  CaptureResponse,
   GDDSummaryData,
   GDDSummaryResponse,
   GDDWindowResponse,
@@ -135,5 +136,17 @@ export const getFarmOptimalRange = async (
   farmId: number,
 ): Promise<OptimalRangeResponse> => {
   const response = await axiosInstance.get(`/api/v1/farms/${farmId}/dashboard`);
+  return response.data;
+};
+
+export const captureCamera = async (
+  farmId: number,
+  cameraId?: number,
+): Promise<CaptureResponse> => {
+  const response = await axiosInstance.post(
+    `/api/v1/farms/${farmId}/camera/capture`,
+    null,
+    { params: cameraId ? { cameraId } : {} },
+  );
   return response.data;
 };
