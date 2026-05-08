@@ -115,3 +115,12 @@ export interface EnvDataResponse {
   data: EnvData;
   message: string | null;
 }
+
+export interface CaptureResponse {
+  captureId: number;
+  cameraId: number;
+  cameraName: string;
+  imageUrl: string;
+  capturedAt: string;
+  contentType: string;
+}
