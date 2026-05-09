@@ -75,10 +75,14 @@ export const toggleScheduleEnabled = async (
     scheduleId: number,
     enabled: boolean,
 ): Promise<ToggleEnabledResponse> => {
-    const response = await axiosInstance.patch<ApiResponse<ToggleEnabledResponse>>(
-        `/api/schedules/${scheduleId}/toggle`,
+
+    const response = await axiosInstance.patch<
+        ApiResponse<ToggleEnabledResponse>
+    >(
+        `/api/schedules/${scheduleId}/enabled`,
         { enabled },
     );
+
     return response.data.data;
 };
 
@@ -112,5 +116,11 @@ export const getFarmScheduleHistories = async (
 };
 
 export const deleteSchedule = async (scheduleId: number): Promise<void> => {
+    if (!scheduleId) {
+        console.error("🚨 삭제 오류: scheduleId 값이 비어있습니다!");
+        alert("삭제하려는 스케줄의 ID를 찾을 수 없습니다.");
+        return;
+    }
+
     await axiosInstance.delete(`/api/schedules/${scheduleId}`);
 };

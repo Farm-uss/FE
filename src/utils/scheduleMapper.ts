@@ -3,7 +3,6 @@ import type {
     ControlSystemType,
     DayOfWeek,
     SensorType,
-    LocalTime,
 } from '@/types/schedule';
 
 const SYSTEM_UI_TO_API: Record<string, string> = {
@@ -105,13 +104,11 @@ export const toApiDays = (uiDays: string[]): DayOfWeek[] =>
 export const toUiDays = (apiDays: DayOfWeek[]): string[] =>
     apiDays.map((d) => DAY_API_TO_UI[d]).filter(Boolean);
 
-export const toLocalTime = (hourStr: string, minuteStr: string): LocalTime => {
-    return {
-        hour: Number(hourStr) || 0,
-        minute: Number(minuteStr) || 0,
-        second: 0,
-        nano: 0,
-    };
+// 변경 후 (문자열 반환)
+export const toLocalTime = (hourStr: string, minuteStr: string): any => {
+    const hh = String(Number(hourStr) || 0).padStart(2, '0');
+    const mm = String(Number(minuteStr) || 0).padStart(2, '0');
+    return `${hh}:${mm}:00`;
 };
 
 export const formatExecutedAt = (dateStr: string | null | undefined): string => {
