@@ -131,7 +131,10 @@ const SchedulePage = () => {
     );
   };
 
-  const toggleScheduleActive = async (id: number, currentEnabled: boolean) => {
+  const toggleScheduleActive = async (
+    id: number,
+    currentEnabled: boolean
+  ) => {
     try {
       await toggleScheduleEnabled(id, !currentEnabled);
       await refetch();
@@ -167,6 +170,8 @@ const SchedulePage = () => {
           daysOfWeek: toApiDays(selectedDays),
           durationMinutes: operationDuration,
         };
+        // 🔵 [디버그] 시간 기반 요청 body
+        console.log('🔵 [시간 기반] 요청 body:', JSON.stringify(body, null, 2));
         await createTimeBasedSchedule(body);
       } else {
         const body = {
@@ -178,15 +183,21 @@ const SchedulePage = () => {
           thresholdValue: Number(conditionValue),
           autoStopWhenRecovered,
         };
-        console.log(body);
+        // 🟢 [디버그] 조건 기반 요청 body
+        console.log('🟢 [조건 기반] 요청 body:', JSON.stringify(body, null, 2));
         await createConditionBasedSchedule(body);
       }
 
       await refetch();
       setIsModalOpen(true);
     } catch (err: unknown) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const e = err as any;
-      console.error(e.response?.data);
+      // 🔴 [디버그] 백엔드가 보낸 진짜 에러 메시지
+      console.error('🔴 등록 실패 - 상태코드:', e?.response?.status);
+      console.error('🔴 백엔드 응답 데이터:', e?.response?.data);
+      console.error('🔴 요청 URL:', e?.config?.url);
+      console.error('🔴 요청 body (axios가 직렬화한 최종):', e?.config?.data);
       alert(
         `스케줄 등록에 실패했습니다.\n${e?.response?.data?.message || e?.message || '알 수 없는 오류'}`
       );
@@ -212,7 +223,7 @@ const SchedulePage = () => {
   }, [histories]);
 
   return (
-    <div className="flex-1 flex flex-col items-center bg-[#F1EFEA] rounded-t-[30px] pt-6 px-6 pb-6 w-full h-[100dvh] overflow-y-auto relative">
+    <div className="flex-1 flex flex-col items-center bg-[#E6E0D3]/50 rounded-t-[30px] pt-6 px-6 pb-6 w-full h-[100dvh] overflow-y-auto relative">
       {step === 1 && (
         <>
           <BottomSheetHeader title="스케줄러" description="" />
