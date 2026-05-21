@@ -42,6 +42,7 @@ export interface FarmResponse {
   area?: number;
   cropCode: string;
   cropsId: number;
+  deviceId: number | null;
 }
 
 export interface FarmSummary {

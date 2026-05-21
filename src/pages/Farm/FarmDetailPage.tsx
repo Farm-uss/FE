@@ -66,7 +66,15 @@ const FarmDetailPage = () => {
         </div>
 
         <main className="flex-1 flex flex-col mt-10">
-          <Outlet context={{ farmInfo }} />
+          <Outlet
+            context={{
+              farmInfo: {
+                farmId: farmInfo.farmId,
+                cropsId: farmInfo.cropsId,
+                deviceId: farmInfo.deviceId ?? null,
+              },
+            }}
+          />
         </main>
       </div>
     </div>
