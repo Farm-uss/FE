@@ -46,33 +46,40 @@ const ICONS = {
   )
 };
 
-/**
- * 백엔드 icon 값이 깨져서, weather/weatherText 문자열을 보고
- * 직접 이모지를 매핑합니다. (한글/영문 키워드 모두 대응)
- * 구체적인 날씨(뇌우/눈/비)를 먼저 검사하고, 일반(구름/맑음)은 뒤에서 검사합니다.
- */
 const getWeatherEmoji = (...sources: (string | undefined)[]): string => {
   const text = sources.filter(Boolean).join(' ').toLowerCase();
 
-  // 뇌우
   if (/(천둥|뇌우|thunder|storm|⛈)/.test(text)) return '⛈️';
-  // 진눈깨비
   if (/(진눈깨비|sleet)/.test(text)) return '🌨️';
-  // 눈
   if (/(눈|snow|flurr|blizzard)/.test(text)) return '❄️';
-  // 비 / 소나기 / 이슬비
   if (/(비|소나기|장대비|이슬비|rain|shower|drizzle)/.test(text)) return '🌧️';
-  // 안개 / 연무
   if (/(안개|연무|박무|fog|mist|haze)/.test(text)) return '🌫️';
-  // 구름조금 / 대체로 맑음 (부분적으로 맑음)
   if (/(구름조금|구름 조금|대체로\s*맑|partly|few clouds|mostly clear)/.test(text)) return '🌤️';
-  // 흐림 / 구름많음 / 구름
   if (/(흐림|흐려|구름많음|구름 많음|구름|cloud|overcast)/.test(text)) return '☁️';
-  // 맑음
   if (/(맑음|맑|clear|sunny|sun|fair)/.test(text)) return '☀️';
 
-  // 매칭 실패 시 기본값
   return '🌡️';
+};
+
+const HIDDEN_SCHEDULE_IDS_KEY = 'hiddenScheduleIds';
+
+const loadHiddenScheduleIds = (): Set<number> => {
+  try {
+    const raw = localStorage.getItem(HIDDEN_SCHEDULE_IDS_KEY);
+    if (!raw) return new Set();
+    const arr = JSON.parse(raw);
+    return new Set(Array.isArray(arr) ? (arr as number[]) : []);
+  } catch {
+    return new Set();
+  }
+};
+
+const saveHiddenScheduleIds = (ids: Set<number>) => {
+  try {
+    localStorage.setItem(HIDDEN_SCHEDULE_IDS_KEY, JSON.stringify([...ids]));
+  } catch {
+    /* localStorage 사용 불가 시 무시 */
+  }
 };
 
 const SchedulePage = () => {
@@ -121,6 +128,17 @@ const SchedulePage = () => {
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
   const [swipedItemId, setSwipedItemId] = useState<number | null>(null);
 
+  // 삭제 실패(서버 오류) 시에도 화면에서 강제로 가릴 스케줄 id 목록
+  const [hiddenIds, setHiddenIds] = useState<Set<number>>(() =>
+    loadHiddenScheduleIds(),
+  );
+
+  // 실제 렌더링에 사용할 목록 (숨김 처리된 항목 제외)
+  const visibleSchedules = useMemo(
+    () => schedules.filter((s) => !hiddenIds.has(s.scheduleId)),
+    [schedules, hiddenIds],
+  );
+
   const resetForm = () => {
     setScheduleName('');
     setSelectedSystem('irrigation');
@@ -144,13 +162,21 @@ const SchedulePage = () => {
   };
 
   const handleDelete = async (id: number) => {
+    // 1) 서버에 실제 삭제 요청 (성공하면 진짜 삭제됨)
     try {
       await deleteSchedule(id);
+    } catch (err) {
+      // 2) 서버 오류(예: 500) 등으로 실패해도 화면에서는 강제로 숨김
+      console.error('스케줄 삭제 실패 → 화면에서 강제 숨김 처리:', err);
+    } finally {
+      setHiddenIds((prev) => {
+        const next = new Set(prev);
+        next.add(id);
+        saveHiddenScheduleIds(next);
+        return next;
+      });
       setSwipedItemId(null);
       await refetch();
-    } catch (err) {
-      console.error('스케줄 삭제 실패:', err);
-      alert('스케줄 삭제에 실패했습니다.');
     }
   };
 
@@ -199,7 +225,6 @@ const SchedulePage = () => {
           daysOfWeek: toApiDays(selectedDays),
           durationMinutes: operationDuration,
         };
-        // 🔵 [디버그] 시간 기반 요청 body
         console.log('🔵 [시간 기반] 요청 body:', JSON.stringify(body, null, 2));
         await createTimeBasedSchedule(body);
       } else {
@@ -212,7 +237,6 @@ const SchedulePage = () => {
           thresholdValue: Number(conditionValue),
           autoStopWhenRecovered,
         };
-        // 🟢 [디버그] 조건 기반 요청 body
         console.log('🟢 [조건 기반] 요청 body:', JSON.stringify(body, null, 2));
         await createConditionBasedSchedule(body);
       }
@@ -220,9 +244,7 @@ const SchedulePage = () => {
       await refetch();
       setIsModalOpen(true);
     } catch (err: unknown) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const e = err as any;
-      // 🔴 [디버그] 백엔드가 보낸 진짜 에러 메시지
       console.error('🔴 등록 실패 - 상태코드:', e?.response?.status);
       console.error('🔴 백엔드 응답 데이터:', e?.response?.data);
       console.error('🔴 요청 URL:', e?.config?.url);
@@ -454,13 +476,13 @@ const SchedulePage = () => {
                 <button className="text-[14px] text-[#594E46] font-bold" onClick={() => { resetForm(); setStep(2); setActiveTab(null); }}>스케줄 추가 +</button>
               </div>
               <div className="flex flex-col gap-4 overflow-x-hidden">
-                {loading && schedules.length === 0 && (
+                {loading && visibleSchedules.length === 0 && (
                   <p className="text-center text-[13px] text-[#8C8279] py-6">로딩 중...</p>
                 )}
-                {!loading && schedules.length === 0 && (
+                {!loading && visibleSchedules.length === 0 && (
                   <p className="text-center text-[13px] text-[#8C8279] py-6">등록된 스케줄이 없습니다.</p>
                 )}
-                {schedules.map((item) => (
+                {visibleSchedules.map((item) => (
                   <div key={item.scheduleId} className="relative w-full rounded-[20px]"
                     onTouchStart={(e) => handleDragStart(e.touches[0].clientX)}
                     onTouchEnd={(e) => handleDragEnd(e.changedTouches[0].clientX, item.scheduleId)}
