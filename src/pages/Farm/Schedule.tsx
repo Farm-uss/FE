@@ -46,6 +46,35 @@ const ICONS = {
   )
 };
 
+/**
+ * 백엔드 icon 값이 깨져서, weather/weatherText 문자열을 보고
+ * 직접 이모지를 매핑합니다. (한글/영문 키워드 모두 대응)
+ * 구체적인 날씨(뇌우/눈/비)를 먼저 검사하고, 일반(구름/맑음)은 뒤에서 검사합니다.
+ */
+const getWeatherEmoji = (...sources: (string | undefined)[]): string => {
+  const text = sources.filter(Boolean).join(' ').toLowerCase();
+
+  // 뇌우
+  if (/(천둥|뇌우|thunder|storm|⛈)/.test(text)) return '⛈️';
+  // 진눈깨비
+  if (/(진눈깨비|sleet)/.test(text)) return '🌨️';
+  // 눈
+  if (/(눈|snow|flurr|blizzard)/.test(text)) return '❄️';
+  // 비 / 소나기 / 이슬비
+  if (/(비|소나기|장대비|이슬비|rain|shower|drizzle)/.test(text)) return '🌧️';
+  // 안개 / 연무
+  if (/(안개|연무|박무|fog|mist|haze)/.test(text)) return '🌫️';
+  // 구름조금 / 대체로 맑음 (부분적으로 맑음)
+  if (/(구름조금|구름 조금|대체로\s*맑|partly|few clouds|mostly clear)/.test(text)) return '🌤️';
+  // 흐림 / 구름많음 / 구름
+  if (/(흐림|흐려|구름많음|구름 많음|구름|cloud|overcast)/.test(text)) return '☁️';
+  // 맑음
+  if (/(맑음|맑|clear|sunny|sun|fair)/.test(text)) return '☀️';
+
+  // 매칭 실패 시 기본값
+  return '🌡️';
+};
+
 const SchedulePage = () => {
   const { farmId: farmIdParam } = useParams<{ farmId: string }>();
   const farmId = useMemo(() => {
@@ -67,7 +96,7 @@ const SchedulePage = () => {
     return weather.hourlyForecast.map((item) => ({
       time: item.displayTime,
       temp: Math.round(item.temperature),
-      icon: item.icon,
+      emoji: getWeatherEmoji(item.weather, item.weatherText),
       text: item.weatherText,
     }));
   }, [weather]);
@@ -400,7 +429,7 @@ const SchedulePage = () => {
                 weatherDisplayList.map((w, idx) => (
                   <div key={idx} className="flex flex-col items-center gap-2 min-w-[50px]">
                     <span className="text-[12px] font-medium text-black whitespace-nowrap">{w.time}</span>
-                    <img src={w.icon} alt={w.text} className="w-8 h-8 object-contain" />
+                    <span className="text-[26px] leading-none" role="img" aria-label={w.text}>{w.emoji}</span>
                     <span className="text-[13px] font-bold">{w.temp}°</span>
                   </div>
                 ))
