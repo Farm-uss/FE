@@ -116,10 +116,8 @@ export const getFarmScheduleHistories = async (
 };
 
 export const deleteSchedule = async (scheduleId: number): Promise<void> => {
-    if (!scheduleId) {
-        console.error("🚨 삭제 오류: scheduleId 값이 비어있습니다!");
-        alert("삭제하려는 스케줄의 ID를 찾을 수 없습니다.");
-        return;
+    if (!Number.isFinite(scheduleId) || scheduleId <= 0) {
+        throw new Error(`유효하지 않은 scheduleId 입니다: ${scheduleId}`);
     }
 
     await axiosInstance.delete(`/api/schedules/${scheduleId}`);
