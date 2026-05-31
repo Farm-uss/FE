@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react'; // useCallback 추가
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import Footer from '@/component/constants/Footer';
@@ -21,15 +21,17 @@ const RemoteControl = () => {
     null,
   );
 
-  const handleToggle = (id: string, name: string) => {
-    const next = !systems[id].isOn;
-    setSystems((prev) => ({ ...prev, [id]: { ...prev[id], isOn: next } }));
-    setModal({ name, isOn: next });
-  };
+  const handleToggle = useCallback((id: string, name: string) => {
+    setSystems((prev) => {
+      const next = !prev[id].isOn;
+      setModal({ name, isOn: next });
+      return { ...prev, [id]: { ...prev[id], isOn: next } };
+    });
+  }, []);
 
-  const handleSlider = (id: string, value: number) => {
+  const handleSlider = useCallback((id: string, value: number) => {
     setSystems((prev) => ({ ...prev, [id]: { ...prev[id], value } }));
-  };
+  }, []);
 
   return (
     <div className="flex-1 flex flex-col items-center bg-[#E6E0D3]/50 rounded-t-[30px] pt-6 px-6 pb-6 w-full overflow-y-auto scroll">
