@@ -18,7 +18,7 @@ const NotificationDropdown = ({
   const navigate = useNavigate();
 
   return (
-    <div className="fixed right-3 top-[55px] w-[280px] bg-white rounded-[20px] shadow-xl z-50 overflow-hidden">
+    <div className="absolute right-0 top-[44px] w-[280px] bg-white rounded-[20px] shadow-xl z-50 overflow-hidden">
       <div className="flex items-center justify-between px-4 py-3 border-b border-[#F0EDE8]">
         <span className="text-b-14b text-[#20110A] font-bold">알림</span>
         {unreadCount > 0 && (
