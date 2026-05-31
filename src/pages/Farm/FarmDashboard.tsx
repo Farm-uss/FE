@@ -1,6 +1,6 @@
 // src/pages/Farm/FarmDashboard.tsx
 import { Icon } from '@iconify/react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
 import Footer from '@/component/constants/Footer';
@@ -48,21 +48,22 @@ const FarmDashboard = () => {
   const { data, loading } = useFarmOptimalRange(String(farmId));
   const { data: envData } = useEnvData(deviceId);
 
-  const sensors = data
-    ? Object.entries(data)
-        .filter(([key]) => key in SENSOR_ICONS)
-        .map(([key, sensor]) => {
-          const s = sensor as OptimalRangeSensor;
-          return {
-            icon: SENSOR_ICONS[key],
-            label: s.label,
-            value: envData
-              ? `${getEnvValue(key, envData)} ${s.unit}`
-              : `- ${s.unit}`,
-            range: `${s.min}~${s.max}`,
-          };
-        })
-    : [];
+  const sensors = useMemo(() => {
+    if (!data) return [];
+    return Object.entries(data)
+      .filter(([key]) => key in SENSOR_ICONS)
+      .map(([key, sensor]) => {
+        const s = sensor as OptimalRangeSensor;
+        return {
+          icon: SENSOR_ICONS[key],
+          label: s.label,
+          value: envData
+            ? `${getEnvValue(key, envData)} ${s.unit}`
+            : `- ${s.unit}`,
+          range: `${s.min}~${s.max}`,
+        };
+      });
+  }, [data, envData]);
 
   const isDeviceNull = deviceId === null;
   const isError = false;
