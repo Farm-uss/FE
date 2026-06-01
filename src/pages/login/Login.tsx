@@ -52,9 +52,8 @@ const CheckIcon = ({ checked, onClick }: CheckIconProps) => (
   <button
     type="button"
     onClick={onClick}
-    className={`flex w-[24px] h-[24px] items-center justify-center rounded-[999px] border transition-colors ${
-      checked ? 'bg-[#2A170C] border-[#2A170C]' : 'bg-white border-[#CFC8B8]'
-    }`}
+    className={`flex w-[24px] h-[24px] items-center justify-center rounded-[999px] border transition-colors ${checked ? 'bg-[#2A170C] border-[#2A170C]' : 'bg-white border-[#CFC8B8]'
+      }`}
   >
     {checked && (
       <svg
@@ -146,6 +145,29 @@ export default function Login() {
     }
   };
 
+  const handleKakaoLogin = () => {
+    const jsKey = import.meta.env.VITE_KAKAO_JS_KEY;
+
+    if (!window.Kakao) {
+      alert('카카오 SDK를 불러오지 못했습니다. 새로고침 후 다시 시도해주세요.');
+      return;
+    }
+    if (!jsKey) {
+      alert('카카오 앱 키가 설정되지 않았습니다. (.env 확인)');
+      return;
+    }
+
+    if (!window.Kakao.isInitialized()) {
+      window.Kakao.init(jsKey);
+    }
+
+    window.Kakao.Auth.authorize({
+      redirectUri:
+        import.meta.env.VITE_KAKAO_REDIRECT_URI ||
+        `${window.location.origin}/oauth/kakao`,
+    });
+  };
+
   const inputClass =
     'mb-[18px] h-[58px] w-full rounded-[16px] bg-white px-[24px] text-[14px] text-[#333] outline-none placeholder:text-[#9A9A9A]';
 
@@ -163,9 +185,8 @@ export default function Login() {
       </div>
 
       <div
-        className={`relative rounded-t-[30px] bg-[#ECE6D9] px-[24px] pb-[40px] transition-all flex-grow flex flex-col ${
-          isSignup ? '-mt-[110px] pt-[24px]' : '-mt-[24px] pt-[76px]'
-        }`}
+        className={`relative rounded-t-[30px] bg-[#ECE6D9] px-[24px] pb-[40px] transition-all flex-grow flex flex-col ${isSignup ? '-mt-[110px] pt-[24px]' : '-mt-[24px] pt-[76px]'
+          }`}
       >
         {!isSignup && (
           <div className="absolute -top-[65px] right-[36px] z-10 flex flex-col items-center gap-[8px]">
@@ -324,7 +345,11 @@ export default function Login() {
               </div>
             )}
 
-            <button className="mb-[44px] h-[58px] w-full rounded-[16px] bg-[#FEE500] text-[20px] font-bold text-[#191919]">
+            <button
+              type="button"
+              onClick={handleKakaoLogin}
+              className="mb-[44px] h-[58px] w-full rounded-[16px] bg-[#FEE500] text-[20px] font-bold text-[#191919]"
+            >
               카카오톡으로 시작하기
             </button>
 

@@ -1,4 +1,3 @@
-// src/routes/router.tsx
 import { lazy, Suspense } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
@@ -20,6 +19,7 @@ const Schedule = lazy(() => import('@/pages/Farm/Schedule'));
 const DashboardMain = lazy(() => import('@/pages/home/DashboardMain'));
 const LandingMain = lazy(() => import('@/pages/home/LandingMain'));
 const Login = lazy(() => import('@/pages/login/Login'));
+const KakaoCallback = lazy(() => import('@/pages/login/KakaoCallback'));
 const ManageFarmsPage = lazy(() => import('@/pages/manage/manage'));
 const MyProfilePage = lazy(() => import('@/pages/mypage/MyProfilePage'));
 const RemoteControl = lazy(() => import('@/pages/Farm/RemoteControl'));
@@ -34,6 +34,7 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <LandingMain /> },
       { path: 'login', element: <Login /> },
+      { path: 'oauth/kakao', element: <KakaoCallback /> },
       { path: 'home', element: <DashboardMain /> },
       { path: 'farm-add', element: <FarmAddPage /> },
 
