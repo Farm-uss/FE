@@ -1,11 +1,16 @@
-import { useMemo, useState, useEffect, type ReactNode } from 'react';
+import { useMemo, useRef, useState, useEffect, type ReactNode } from 'react';
 import { useParams } from 'react-router-dom';
 
 import {
   createConditionBasedSchedule,
   createTimeBasedSchedule,
   deleteSchedule,
+  getConditionBasedSchedule,
+  getScheduleHistories,
+  getTimeBasedSchedule,
   toggleScheduleEnabled,
+  updateConditionBasedSchedule,
+  updateTimeBasedSchedule,
 } from '@/apis/scheduleService';
 import ConfirmPng from '@/assets/image/schedule/confirm.png';
 import SchedulePng from '@/assets/image/schedule/schedule.png';
@@ -14,6 +19,7 @@ import Footer from '@/component/constants/Footer';
 import BottomSheetHeader from '@/component/farm/farmDetail/BottomSheetHeader';
 import { useSchedules } from '@/hooks/useSchedules';
 import { useFarmWeather } from '@/hooks/useFarmWeather';
+import type { ScheduleHistoryItem, ScheduleListItem } from '@/types/schedule';
 import {
   formatExecutedAt,
   toApiControlSystem,
@@ -21,6 +27,10 @@ import {
   toApiOperator,
   toApiSensor,
   toLocalTime,
+  toUiControlSystem,
+  toUiDays,
+  toUiOperator,
+  toUiSensor,
 } from '@/utils/scheduleMapper';
 
 const SENSORS = [
@@ -136,6 +146,21 @@ const SchedulePage = () => {
 
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
   const [swipedItemId, setSwipedItemId] = useState<number | null>(null);
+  // 스와이프(드래그) 직후 발생하는 click을 무시하기 위한 플래그
+  const suppressClickRef = useRef(false);
+
+  // 수정 중인 스케줄 (null이면 신규 등록 모드)
+  const [editing, setEditing] = useState<{
+    id: number;
+    type: 'TIME_BASED' | 'CONDITION_BASED';
+  } | null>(null);
+
+  // 개별 스케줄 실행 이력 모달
+  const [historyModal, setHistoryModal] = useState<{
+    name: string;
+    items: ScheduleHistoryItem[];
+  } | null>(null);
+  const [historyLoading, setHistoryLoading] = useState(false);
 
   // 삭제 실패(서버 오류) 시에도 화면에서 강제로 가릴 스케줄 id 목록
   const [hiddenIds, setHiddenIds] = useState<Set<number>>(() =>
@@ -159,14 +184,22 @@ const SchedulePage = () => {
     setSelectedSensor('temperature');
     setConditionOperator('greater');
     setConditionValue('');
+    setEditing(null);
   };
 
-  const handleDragStart = (clientX: number) => setTouchStartX(clientX);
+  const handleDragStart = (clientX: number) => {
+    setTouchStartX(clientX);
+    suppressClickRef.current = false;
+  };
   const handleDragEnd = (clientX: number, id: number) => {
     if (touchStartX === null) return;
     const diff = touchStartX - clientX;
-    if (diff > 50) setSwipedItemId(id);
-    else if (diff < -30 && swipedItemId === id) setSwipedItemId(null);
+    // 10px 이상 움직였으면 탭이 아니라 스와이프 → 뒤따르는 click 무시
+    if (Math.abs(diff) > 10) {
+      suppressClickRef.current = true;
+      if (diff > 50) setSwipedItemId(id);
+      else if (diff < -30 && swipedItemId === id) setSwipedItemId(null);
+    }
     setTouchStartX(null);
   };
 
@@ -208,6 +241,66 @@ const SchedulePage = () => {
     }
   };
 
+  // 목록 카드 탭 → 상세 조회로 폼을 채우고 수정 모드로 진입
+  const handleEditSchedule = async (item: ScheduleListItem) => {
+    try {
+      resetForm();
+
+      if (item.scheduleType === 'TIME_BASED') {
+        const d = await getTimeBasedSchedule(item.scheduleId);
+        setScheduleName(d.name);
+        setSelectedSystem(toUiControlSystem(d.controlSystemType));
+        setOperationMode('time');
+
+        // executeTime이 객체({hour,minute}) 또는 문자열("HH:MM:SS") 둘 다 대응
+        const t = d.timeRule?.executeTime as unknown;
+        if (typeof t === 'string') {
+          const [h, m] = t.split(':');
+          setExecutionHour(String(Number(h)));
+          setExecutionMinute(String(Number(m)));
+        } else if (t && typeof t === 'object') {
+          const obj = t as { hour?: number; minute?: number };
+          setExecutionHour(String(obj.hour ?? 0));
+          setExecutionMinute(String(obj.minute ?? 0));
+        }
+        setSelectedDays(toUiDays(d.timeRule?.daysOfWeek ?? []));
+        setOperationDuration(d.timeRule?.durationMinutes ?? 0);
+      } else {
+        const d = await getConditionBasedSchedule(item.scheduleId);
+        setScheduleName(d.name);
+        setSelectedSystem(toUiControlSystem(d.controlSystemType));
+        setOperationMode('condition');
+        setSelectedSensor(toUiSensor(d.conditionRule.sensorType));
+        setConditionOperator(toUiOperator(d.conditionRule.operator));
+        setConditionValue(String(d.conditionRule.conditionValue ?? ''));
+      }
+
+      setEditing({ id: item.scheduleId, type: item.scheduleType });
+      setSwipedItemId(null);
+      setActiveTab(null);
+      setStep(2);
+    } catch (err) {
+      console.error('스케줄 상세 조회 실패:', err);
+      alert('스케줄 정보를 불러오지 못했습니다.');
+    }
+  };
+
+  // 개별 스케줄 실행 이력 보기
+  const handleViewHistory = async (item: ScheduleListItem) => {
+    setHistoryLoading(true);
+    setHistoryModal({ name: item.name, items: [] });
+    try {
+      const items = await getScheduleHistories(item.scheduleId);
+      setHistoryModal({ name: item.name, items });
+    } catch (err) {
+      console.error('스케줄 이력 조회 실패:', err);
+      alert('실행 이력을 불러오지 못했습니다.');
+      setHistoryModal(null);
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
+
   const handleSubmitSchedule = async () => {
     if (farmId === null) {
       alert('농장 정보를 확인할 수 없습니다.');
@@ -217,7 +310,10 @@ const SchedulePage = () => {
       alert('스케줄 이름을 입력해주세요.');
       return;
     }
-    if (operationMode === 'condition' && !conditionValue.trim()) {
+    // 수정 모드면 원래 타입 기준, 신규면 선택한 모드 기준
+    const isTime = editing ? editing.type === 'TIME_BASED' : operationMode === 'time';
+
+    if (!isTime && !conditionValue.trim()) {
       alert('실행 조건 값을 입력해주세요.');
       return;
     }
@@ -225,7 +321,7 @@ const SchedulePage = () => {
     try {
       setIsSubmitting(true);
 
-      if (operationMode === 'time') {
+      if (isTime) {
         const body = {
           farmId,
           name: scheduleName,
@@ -235,7 +331,11 @@ const SchedulePage = () => {
           durationMinutes: operationDuration,
         };
         console.log('🔵 [시간 기반] 요청 body:', JSON.stringify(body, null, 2));
-        await createTimeBasedSchedule(body);
+        if (editing) {
+          await updateTimeBasedSchedule(editing.id, body);
+        } else {
+          await createTimeBasedSchedule(body);
+        }
       } else {
         const body = {
           farmId,
@@ -247,7 +347,11 @@ const SchedulePage = () => {
           autoStopWhenRecovered,
         };
         console.log('🟢 [조건 기반] 요청 body:', JSON.stringify(body, null, 2));
-        await createConditionBasedSchedule(body);
+        if (editing) {
+          await updateConditionBasedSchedule(editing.id, body);
+        } else {
+          await createConditionBasedSchedule(body);
+        }
       }
 
       await refetch();
@@ -295,7 +399,7 @@ const SchedulePage = () => {
 
       {step === 2 && (
         <div className="w-full h-full flex flex-col pb-2">
-          <BottomSheetHeader title="스케줄 추가" description="" />
+          <BottomSheetHeader title={editing ? "스케줄 수정" : "스케줄 추가"} description="" />
           <p className="text-[14px] text-black/80 text-center mb-6 tracking-tight mt-2">자신에게 맞는 자동화 시스템을 설정하세요.</p>
 
           <SectionDivider title="스케줄 이름" />
@@ -333,7 +437,7 @@ const SchedulePage = () => {
 
       {(step === 3 || step === 4) && (
         <div className="w-full h-full flex flex-col pb-2">
-          <BottomSheetHeader title="스케줄 추가" description="" />
+          <BottomSheetHeader title={editing ? "스케줄 수정" : "스케줄 추가"} description="" />
           <p className="text-[14px] text-black/80 text-center mb-6 tracking-tight mt-2">자신에게 맞는 자동화 시스템을 설정하세요.</p>
 
           <SectionDivider title="어떻게 작동 할까요?" />
@@ -496,13 +600,25 @@ const SchedulePage = () => {
                         </button>
                       </div>
                     </div>
-                    <div className={`bg-[#EAE6DF] rounded-[20px] p-5 w-full relative z-10 transition-transform duration-300 ${swipedItemId === item.scheduleId ? '-translate-x-[85px]' : 'translate-x-0'}`}>
+                    <div
+                      onClick={() => {
+                        if (suppressClickRef.current) {
+                          suppressClickRef.current = false;
+                          return;
+                        }
+                        if (swipedItemId === item.scheduleId) {
+                          setSwipedItemId(null);
+                        } else {
+                          handleEditSchedule(item);
+                        }
+                      }}
+                      className={`bg-[#EAE6DF] rounded-[20px] p-5 w-full relative z-10 cursor-pointer transition-transform duration-300 ${swipedItemId === item.scheduleId ? '-translate-x-[85px]' : 'translate-x-0'}`}>
                       <div className="flex justify-between items-start mb-2">
                         <div className="flex items-center gap-2">
                           <span className="text-[15px] font-bold text-[#2A1E17]">☀ {item.name}</span>
                           <span className="text-[13px] text-[#8C8279]">| {item.scheduleType === 'TIME_BASED' ? '시간 기반' : '조건 기반'}</span>
                         </div>
-                        <div onClick={() => toggleScheduleActive(item.scheduleId, item.enabled)} className={`w-[60px] h-[32px] flex items-center rounded-full p-1 cursor-pointer transition-colors shadow-sm ${item.enabled ? 'bg-black' : 'bg-white'}`}>
+                        <div onClick={(e) => { e.stopPropagation(); toggleScheduleActive(item.scheduleId, item.enabled); }} className={`w-[60px] h-[32px] flex items-center rounded-full p-1 cursor-pointer transition-colors shadow-sm ${item.enabled ? 'bg-black' : 'bg-white'}`}>
                           <div className={`transition-transform duration-300 ${item.enabled ? 'translate-x-[26px]' : 'translate-x-0'}`}>
                             <img src={ToggleButtonPng} alt="toggle" className="w-[38px] h-[38px] max-w-none" />
                           </div>
@@ -510,7 +626,14 @@ const SchedulePage = () => {
                       </div>
                       <p className="text-[14px] font-bold text-[#594E46] mb-1">조건 : {item.scheduleTypeDescription || '-'}</p>
                       <p className="text-[14px] font-bold text-[#594E46] mb-3">동작 : {item.controlSystemDescription || item.summary || '-'}</p>
-                      <p className="text-[12px] text-[#8C8279]">마지막 작동 : {formatExecutedAt(item.lastExecutedAt)}</p>
+                      <div className="flex justify-between items-center">
+                        <p className="text-[12px] text-[#8C8279]">마지막 작동 : {formatExecutedAt(item.lastExecutedAt)}</p>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleViewHistory(item); }}
+                          className="text-[12px] font-bold text-[#594E46] underline underline-offset-2 shrink-0 ml-2">
+                          이력 보기 ›
+                        </button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -571,7 +694,7 @@ const SchedulePage = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 px-8">
           <div className="bg-white rounded-[30px] w-full max-w-[340px] pt-10 pb-8 px-6 flex flex-col items-center shadow-xl">
             <img src={ConfirmPng} alt="success" className="w-[180px] h-auto mb-6 object-contain" />
-            <div className="text-[#2A160C] text-[18px] font-extrabold mb-8 text-center">스케줄이 성공적으로 설정 되었습니다!</div>
+            <div className="text-[#2A160C] text-[18px] font-extrabold mb-8 text-center">{editing ? '스케줄이 성공적으로 수정되었습니다!' : '스케줄이 성공적으로 설정 되었습니다!'}</div>
             <button
               onClick={() => {
                 setIsModalOpen(false);
@@ -580,6 +703,37 @@ const SchedulePage = () => {
                 setActiveTab('list');
               }}
               className="bg-[#2A160C] text-white w-[130px] py-3 rounded-full text-[16px] font-bold">확인</button>
+          </div>
+        </div>
+      )}
+      {historyModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 px-6" onClick={() => setHistoryModal(null)}>
+          <div className="bg-white rounded-[24px] w-full max-w-[360px] max-h-[70vh] flex flex-col p-5 shadow-xl" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-4 shrink-0">
+              <span className="text-[16px] font-extrabold text-[#2A160C]">{historyModal.name} · 실행 이력</span>
+              <button onClick={() => setHistoryModal(null)} className="text-[20px] text-[#8C8279] leading-none px-1">×</button>
+            </div>
+            <div className="flex flex-col gap-3 overflow-y-auto">
+              {historyLoading ? (
+                <p className="text-center text-[13px] text-[#8C8279] py-6">불러오는 중...</p>
+              ) : historyModal.items.length === 0 ? (
+                <p className="text-center text-[13px] text-[#8C8279] py-6">실행 이력이 없습니다.</p>
+              ) : (
+                historyModal.items.map((h) => {
+                  const isSuccess = h.status === 'SUCCESS';
+                  return (
+                    <div key={h.historyId} className={`border-2 border-dashed rounded-[16px] p-3 bg-white ${isSuccess ? 'border-gray-300' : 'border-blue-400'}`}>
+                      <p className="text-[12px] font-bold text-black mb-1">{formatExecutedAt(h.executedAt)}</p>
+                      <p className="text-[13px] text-black/80">
+                        {isSuccess
+                          ? `${h.statusDescription || '실행 성공'}${h.durationMinutes ? ` (${h.durationMinutes}분)` : ''}`
+                          : `사유 : ${h.message || h.statusDescription || '실행 실패'}`}
+                      </p>
+                    </div>
+                  );
+                })
+              )}
+            </div>
           </div>
         </div>
       )}
