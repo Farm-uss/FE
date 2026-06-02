@@ -115,11 +115,10 @@ export const postVisionInference = async (
   cropsId: number,
   image: File,
 ): Promise<VisionInferenceResponse> => {
-  // 1. FormData 객체 생성 (멀티파트 봉투 만들기)
+  // 1. FormData 객체 생성
   const formData = new FormData();
-  formData.append('image', image); // 백엔드에서 받는 필드명 'image'
+  formData.append('image', image);
 
-  // 2. 요청 보내기 (axios가 FormData를 보고 자동으로 헤더를 설정해줘!)
   const response = await axiosInstance.post(
     `/api/v1/farms/${farmId}/crops/${cropsId}/vision-inference`,
     formData,
@@ -147,6 +146,16 @@ export const captureCamera = async (
     `/api/v1/farms/${farmId}/camera/capture`,
     null,
     { params: cameraId ? { cameraId } : {} },
+  );
+  return response.data;
+};
+//최근 이미지로 병해충 검사
+export const getLatestCaptureInference = async (
+  farmId: number,
+  cropsId: number,
+): Promise<VisionInferenceResponse> => {
+  const response = await axiosInstance.get<VisionInferenceResponse>(
+    `/api/v1/farms/${farmId}/crops/${cropsId}/vision-inference/latest-capture`,
   );
   return response.data;
 };
