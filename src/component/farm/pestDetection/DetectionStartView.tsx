@@ -6,9 +6,10 @@ import ImageSourceModal from './ImageSourceModal';
 
 interface Props {
   onImageUpload: (image: File) => void;
+  onLatestCapture: () => void;
 }
 
-const DetectionStartView = ({ onImageUpload }: Props) => {
+const DetectionStartView = ({ onImageUpload, onLatestCapture }: Props) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -58,6 +59,10 @@ const DetectionStartView = ({ onImageUpload }: Props) => {
           onUpload={() => {
             setIsModalOpen(false);
             fileInputRef.current?.click();
+          }}
+          onLatestCapture={() => {
+            setIsModalOpen(false);
+            onLatestCapture();
           }}
           onClose={() => setIsModalOpen(false)}
         />

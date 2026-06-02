@@ -154,7 +154,7 @@ export const getLatestCaptureInference = async (
   farmId: number,
   cropsId: number,
 ): Promise<VisionInferenceResponse> => {
-  const response = await axiosInstance.get<VisionInferenceResponse>(
+  const response = await axiosInstance.post<VisionInferenceResponse>(
     `/api/v1/farms/${farmId}/crops/${cropsId}/vision-inference/latest-capture`,
   );
   return response.data;
