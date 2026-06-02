@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState, useEffect, type ReactNode } from 'react';
 import { useParams } from 'react-router-dom';
 
 import {
@@ -45,6 +45,14 @@ const ICONS = {
     </>
   )
 };
+
+const SectionDivider = ({ title, extra }: { title: string; extra?: ReactNode }) => (
+  <div className="flex items-center mb-4 gap-4 mt-2 shrink-0">
+    <span className="text-[18px] font-bold text-black whitespace-nowrap">{title}</span>
+    <div className="h-[2px] bg-gray-300 flex-1"></div>
+    {extra}
+  </div>
+);
 
 const getWeatherEmoji = (...sources: (string | undefined)[]): string => {
   const text = sources.filter(Boolean).join(' ').toLowerCase();
@@ -93,11 +101,6 @@ const SchedulePage = () => {
   const { weather, loading: weatherLoading } = useFarmWeather(farmId);
   const [currentTime, setCurrentTime] = useState(new Date());
 
-  useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 60000);
-    return () => clearInterval(timer);
-  }, []);
-
   const weatherDisplayList = useMemo(() => {
     if (!weather?.hourlyForecast) return [];
     return weather.hourlyForecast.map((item) => ({
@@ -109,6 +112,12 @@ const SchedulePage = () => {
   }, [weather]);
 
   const [step, setStep] = useState(1);
+
+  useEffect(() => {
+    if (step !== 5) return;
+    const timer = setInterval(() => setCurrentTime(new Date()), 60000);
+    return () => clearInterval(timer);
+  }, [step]);
   const [activeTab, setActiveTab] = useState<'list' | 'history' | null>('list');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -256,14 +265,6 @@ const SchedulePage = () => {
       setIsSubmitting(false);
     }
   };
-
-  const SectionDivider = ({ title, extra }: { title: string; extra?: React.ReactNode }) => (
-    <div className="flex items-center mb-4 gap-4 mt-2 shrink-0">
-      <span className="text-[18px] font-bold text-black whitespace-nowrap">{title}</span>
-      <div className="h-[2px] bg-gray-300 flex-1"></div>
-      {extra}
-    </div>
-  );
 
   const historyStats = useMemo(() => {
     const total = histories.length;
