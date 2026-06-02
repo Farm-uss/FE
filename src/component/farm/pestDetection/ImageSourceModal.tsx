@@ -1,9 +1,14 @@
 interface ImageSourceModalProps {
   onUpload: () => void;
+  onLatestCapture: () => void;
   onClose: () => void;
 }
 
-const ImageSourceModal = ({ onUpload, onClose }: ImageSourceModalProps) => (
+const ImageSourceModal = ({
+  onUpload,
+  onLatestCapture,
+  onClose,
+}: ImageSourceModalProps) => (
   <div
     className="fixed inset-0 z-50 flex items-end justify-center"
     onClick={onClose}
@@ -24,13 +29,13 @@ const ImageSourceModal = ({ onUpload, onClose }: ImageSourceModalProps) => (
       </button>
 
       <button
-        disabled
-        className="w-full h-[56px] bg-[#F3EFE6] text-[#20110A]/40 rounded-[16px] text-b-16b cursor-not-allowed flex items-center justify-center gap-2"
+        onClick={() => {
+          onLatestCapture();
+          onClose();
+        }}
+        className="w-full h-[56px] bg-[#648E2E] text-white rounded-[16px] text-b-16b active:scale-95 transition-transform"
       >
-        기록된 사진 사용하기
-        <span className="text-c-10m bg-[#E8E2D5] text-[#20110A]/50 px-2 py-0.5 rounded-full">
-          준비 중
-        </span>
+        최근사진으로 검사하기
       </button>
     </div>
   </div>

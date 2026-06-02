@@ -1,7 +1,10 @@
 import { useCallback, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
-import { postVisionInference } from '@/apis/farmService';
+import {
+  getLatestCaptureInference,
+  postVisionInference,
+} from '@/apis/farmService';
 import CommonModal from '@/component/constants/CommonModal';
 import BottomSheetHeader from '@/component/farm/farmDetail/BottomSheetHeader';
 import DetectionLoadingView from '@/component/farm/pestDetection/DetectionLoadingView';
@@ -28,12 +31,10 @@ const PestDetection = () => {
           farmInfo.cropsId,
           imageFile,
         );
-
         if (response.success) {
           setResult(response.data);
           setStatus('result');
         } else {
-          // success가 false로 오는 경우 처리
           setIsErrorOpen(true);
           setStatus('start');
         }
@@ -45,6 +46,27 @@ const PestDetection = () => {
     },
     [farmInfo.farmId, farmInfo.cropsId],
   );
+
+  const handleLatestCaptureInference = useCallback(async () => {
+    setStatus('loading');
+    try {
+      const response = await getLatestCaptureInference(
+        farmInfo.farmId,
+        farmInfo.cropsId,
+      );
+      if (response.success) {
+        setResult(response.data);
+        setStatus('result');
+      } else {
+        setIsErrorOpen(true);
+        setStatus('start');
+      }
+    } catch (err) {
+      console.error('최근 캡처 분석 실패:', err);
+      setIsErrorOpen(true);
+      setStatus('start');
+    }
+  }, [farmInfo.farmId, farmInfo.cropsId]);
 
   return (
     <div className="flex-1 flex flex-col items-center rounded-t-[30px] w-full overflow-hidden transition-all duration-700 bg-[#E6E0D3]/50">
@@ -58,7 +80,10 @@ const PestDetection = () => {
       <div className="flex-1 w-full h-full flex flex-col items-center justify-center overflow-y-auto scroll-none">
         {status === 'start' && (
           <div className="px-9 w-full">
-            <DetectionStartView onImageUpload={handleImageInference} />
+            <DetectionStartView
+              onImageUpload={handleImageInference}
+              onLatestCapture={handleLatestCaptureInference}
+            />
           </div>
         )}
 
@@ -74,13 +99,11 @@ const PestDetection = () => {
               isNormal={result.diseaseStatus === 0}
               diseaseName={result.diseaseName}
             />
-
             {result.diseaseStatus !== 0 && (
               <div className="w-full shrink-0 px-9">
                 <DiseaseDetailSection data={result} />
               </div>
             )}
-
             <button
               onClick={() => {
                 setResult(null);
