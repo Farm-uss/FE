@@ -1,32 +1,40 @@
 import { Icon } from '@iconify/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useOutletContext } from 'react-router-dom';
 
 import { captureCamera } from '@/apis/farmService';
 import Footer from '@/component/constants/Footer';
 import BottomSheetHeader from '@/component/farm/farmDetail/BottomSheetHeader';
+import { useStreamingCamera } from '@/hooks/useStreamingCamera';
 import type { CaptureResponse } from '@/types/farmService';
 
 import type { FarmDetailContext } from './GrowthTraking';
 
 const FarmStreamingPage = () => {
   const { farmInfo } = useOutletContext<FarmDetailContext>();
+  const { imgRef, isStreaming, isConnected, streamError, start, stop } =
+    useStreamingCamera(farmInfo.farmId);
+
   const [capturing, setCapturing] = useState(false);
   const [captureResult, setCaptureResult] = useState<CaptureResponse | null>(
     null,
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [captureError, setCaptureError] = useState<string | null>(null);
+
+  useEffect(() => {
+    return () => stop();
+  }, [stop]);
 
   const handleCapture = async () => {
     setCapturing(true);
-    setError(null);
+    setCaptureError(null);
     try {
       const result = await captureCamera(farmInfo.farmId);
       setCaptureResult(result);
       setIsModalOpen(true);
     } catch {
-      setError('캡처에 실패했어요. 다시 시도해주세요.');
+      setCaptureError('캡처에 실패했어요. 다시 시도해주세요.');
     } finally {
       setCapturing(false);
     }
@@ -39,21 +47,85 @@ const FarmStreamingPage = () => {
         description="실시간으로 내 농장을 확인하세요!"
       />
 
-      <div className="bg-white w-full h-[270px] rounded-2xl flex items-center justify-center shadow-inner">
-        <Icon
-          icon="material-symbols:photo-camera-rounded"
-          className="text-[150px] text-[#20110A]/20"
+      {/* 스트리밍 화면 */}
+      <div className="bg-black w-full h-[270px] rounded-2xl shadow-inner overflow-hidden relative">
+        {/* 스트리밍 화면 (항상 렌더, opacity로 제어) */}
+        <img
+          ref={imgRef}
+          alt="스트리밍"
+          className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-300 ${isConnected ? 'opacity-100' : 'opacity-0'}`}
         />
+
+        {/* 시작 전 — 카메라 버튼 */}
+        {!isStreaming && !streamError && (
+          <button
+            onClick={start}
+            className="absolute inset-0 flex flex-col items-center justify-center gap-3 active:scale-90 transition-transform"
+          >
+            <div className="w-20 h-20 rounded-full bg-white/10 border-2 border-white/30 flex items-center justify-center">
+              <Icon
+                icon="material-symbols:photo-camera-rounded"
+                className="text-[44px] text-white/60"
+              />
+            </div>
+            <span className="text-c-12m text-white/50">
+              탭하여 스트리밍 시작
+            </span>
+          </button>
+        )}
+
+        {/* 연결 중 */}
+        {isStreaming && !isConnected && !streamError && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-3">
+            <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            <p className="text-c-12m text-white/50">연결 중...</p>
+          </div>
+        )}
+
+        {/* 에러 */}
+        {streamError && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
+            <Icon
+              icon="material-symbols:videocam-off-outline"
+              className="text-[60px] text-white/20"
+            />
+            <p className="text-c-12m text-white/40">{streamError}</p>
+            <button
+              onClick={start}
+              className="px-4 py-2 bg-white/10 rounded-full text-c-12m text-white/60 active:scale-95 transition-transform"
+            >
+              다시 시도
+            </button>
+          </div>
+        )}
+
+        {/* LIVE 뱃지 */}
+        {isConnected && (
+          <div className="absolute top-3 left-3 flex items-center gap-1.5 bg-black/40 rounded-full px-3 py-1">
+            <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+            <span className="text-[11px] text-white font-medium">LIVE</span>
+          </div>
+        )}
+
+        {/* 중지 버튼 */}
+        {isStreaming && (
+          <button
+            onClick={stop}
+            className="absolute top-3 right-3 bg-black/40 rounded-full p-2 active:scale-90 transition-transform"
+          >
+            <Icon
+              icon="material-symbols:stop-rounded"
+              className="text-[20px] text-white"
+            />
+          </button>
+        )}
       </div>
 
-      <div className="text-center mt-2">
-        <p className="text-c-12m text-[#20110A]/40">
-          카메라 연결 상태를 확인 중입니다...
-        </p>
-        {error && <p className="text-c-12m text-red-500 mt-1">{error}</p>}
-      </div>
+      {captureError && (
+        <p className="text-c-12m text-red-500">{captureError}</p>
+      )}
 
-      <div className="w-full flex justify-between items-center pt-10">
+      <div className="w-full flex justify-between items-center pt-4">
         <button className="w-[120px] h-[45px] text-b-14b bg-white border border-[#8B8880] rounded-3xl">
           해상도
         </button>
