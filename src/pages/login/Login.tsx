@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import api from '@/apis/axios';
@@ -153,18 +153,66 @@ export default function Login() {
     }
   };
 
-  const handleKakaoLogin = () => {
-    const jsKey = import.meta.env.VITE_KAKAO_JS_KEY;
+  // 카카오 JS SDK 공식 주소 (t1.kakaocdn.net 이 정식, t1.kakao.com 아님)
+  const KAKAO_SDK_URL = 'https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js';
 
-    if (!window.Kakao) {
-      alert('카카오 SDK를 불러오지 못했습니다. 새로고침 후 다시 시도해주세요.');
-      return;
-    }
+  // SDK 스크립트를 동적으로 로드 (index.html에 의존하지 않음)
+  const loadKakaoSdk = (): Promise<void> =>
+    new Promise((resolve, reject) => {
+      if (window.Kakao) {
+        resolve();
+        return;
+      }
+      const existing = document.querySelector<HTMLScriptElement>(
+        `script[src="${KAKAO_SDK_URL}"]`,
+      );
+      if (existing) {
+        existing.addEventListener('load', () => resolve());
+        existing.addEventListener('error', () => reject(new Error('Kakao SDK load error')));
+        return;
+      }
+      const script = document.createElement('script');
+      script.src = KAKAO_SDK_URL;
+      script.async = true;
+      script.crossOrigin = 'anonymous';
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error('Kakao SDK load error'));
+      document.head.appendChild(script);
+    });
+
+  // 페이지 진입 시 미리 SDK 로드 + 초기화
+  useEffect(() => {
+    const jsKey = import.meta.env.VITE_KAKAO_JS_KEY;
+    if (!jsKey) return;
+    loadKakaoSdk()
+      .then(() => {
+        if (window.Kakao && !window.Kakao.isInitialized()) {
+          window.Kakao.init(jsKey);
+        }
+      })
+      .catch((e) => console.error('카카오 SDK 로드 실패:', e));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleKakaoLogin = async () => {
+    const jsKey = import.meta.env.VITE_KAKAO_JS_KEY;
     if (!jsKey) {
       alert('카카오 앱 키가 설정되지 않았습니다. (.env 확인)');
       return;
     }
 
+    try {
+      // 아직 로드 전이면 여기서 로드 보장
+      await loadKakaoSdk();
+    } catch {
+      alert('카카오 SDK를 불러오지 못했습니다. 네트워크 상태를 확인해주세요.');
+      return;
+    }
+
+    if (!window.Kakao) {
+      alert('카카오 SDK를 불러오지 못했습니다. 새로고침 후 다시 시도해주세요.');
+      return;
+    }
     if (!window.Kakao.isInitialized()) {
       window.Kakao.init(jsKey);
     }
