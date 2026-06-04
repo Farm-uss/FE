@@ -17,7 +17,10 @@ const FarmList = ({ farms }: Props) => {
       {/* 헤더 부분 */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-b-14m text-[#20110A]">My FARM</h2>
-        <button className="text-c-10m text-black-60 bg-[#E6E0D3] py-1 rounded-full w-[85px] h-[30px]">
+        <button
+          onClick={() => navigate('/manage')}
+          className="text-c-10m text-black-60 bg-[#E6E0D3] py-1 rounded-full w-[85px] h-[30px] active:scale-95 transition-transform"
+        >
           농장 관리로 이동
         </button>
       </div>
