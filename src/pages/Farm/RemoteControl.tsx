@@ -1,6 +1,7 @@
-import { useCallback, useState } from 'react'; // useCallback 추가
+import { useCallback, useState } from 'react';
 import { useNavigate, useOutletContext } from 'react-router-dom';
 
+import { pumpOff, pumpOn } from '@/apis/irrigationService';
 import Footer from '@/component/constants/Footer';
 import BottomSheetHeader from '@/component/farm/farmDetail/BottomSheetHeader';
 import SystemCard from '@/component/farm/remoteToggle/SystemCard';
@@ -12,7 +13,7 @@ import type { FarmDetailContext } from './GrowthTraking';
 
 const RemoteControl = () => {
   const navigate = useNavigate();
-  useOutletContext<FarmDetailContext>();
+  const { farmInfo } = useOutletContext<FarmDetailContext>();
 
   const [systems, setSystems] = useState<Record<string, SystemState>>(
     Object.fromEntries(SYSTEMS.map((s) => [s.id, { isOn: false, value: 60 }])),
@@ -21,13 +22,30 @@ const RemoteControl = () => {
     null,
   );
 
-  const handleToggle = useCallback((id: string, name: string) => {
-    setSystems((prev) => {
-      const next = !prev[id].isOn;
-      setModal({ name, isOn: next });
-      return { ...prev, [id]: { ...prev[id], isOn: next } };
-    });
-  }, []);
+  const handleToggle = useCallback(
+    (id: string, name: string) => {
+      setSystems((prev) => {
+        const next = !prev[id].isOn;
+        setModal({ name, isOn: next });
+
+        // 관수 시스템 API 연동
+        if (id === 'irrigation' && farmInfo.deviceId) {
+          if (next) {
+            pumpOn(farmInfo.deviceId).catch((err) =>
+              console.error('펌프 ON 실패:', err),
+            );
+          } else {
+            pumpOff(farmInfo.deviceId).catch((err) =>
+              console.error('펌프 OFF 실패:', err),
+            );
+          }
+        }
+
+        return { ...prev, [id]: { ...prev[id], isOn: next } };
+      });
+    },
+    [farmInfo.deviceId],
+  );
 
   const handleSlider = useCallback((id: string, value: number) => {
     setSystems((prev) => ({ ...prev, [id]: { ...prev[id], value } }));
@@ -52,7 +70,6 @@ const RemoteControl = () => {
         ))}
       </div>
 
-      {/* 뒤로가기 버튼 */}
       <button
         onClick={() => navigate(-1)}
         className="w-full h-[54px] rounded-[16px] bg-[#20110A] text-white text-b-16b active:scale-95 transition-all mb-4"
