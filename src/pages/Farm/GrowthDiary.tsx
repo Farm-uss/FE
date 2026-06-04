@@ -230,12 +230,10 @@ const GrowthDiary = () => {
           )}
         </div>
 
-        <div className="w-full text-center mt-10 mb-4 text-[#8B8880] text-[14px]">
-          Smart FARM, Smart US.
-        </div>
+        <div className="w-full text-center mt-10 mb-4 text-[#8B8880] text-[14px]" />
         <Footer />
       </div>
-    </div>
+    </div >
   );
 };
 
