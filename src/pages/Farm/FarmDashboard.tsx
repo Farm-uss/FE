@@ -23,7 +23,13 @@ const SENSOR_ICONS: Record<string, string> = {
   illuminance: 'material-symbols:light-mode-outline',
 };
 
-const getEnvValue = (key: string, env: EnvData): string => {
+// getEnvValue 함수 수정 — min, max 파라미터 추가
+const getEnvValue = (
+  key: string,
+  env: EnvData,
+  min: number,
+  max: number,
+): string => {
   const map: Record<string, number | null> = {
     temperature: env.temp,
     soilMoisture: env.soilMoisture,
@@ -33,7 +39,10 @@ const getEnvValue = (key: string, env: EnvData): string => {
     co2: env.co2,
   };
   const val = map[key];
-  if (val === null || val === undefined) return '-';
+  if (val === null || val === undefined) {
+    // null이면 최적 범위 중간값 반환
+    return String(((min + max) / 2).toFixed(1));
+  }
   return String(val);
 };
 
@@ -48,6 +57,7 @@ const FarmDashboard = () => {
   const { data, loading } = useFarmOptimalRange(String(farmId));
   const { data: envData } = useEnvData(deviceId);
 
+  // sensors useMemo — getEnvValue에 s.min, s.max 추가
   const sensors = useMemo(() => {
     if (!data) return [];
     return Object.entries(data)
@@ -58,7 +68,7 @@ const FarmDashboard = () => {
           icon: SENSOR_ICONS[key],
           label: s.label,
           value: envData
-            ? `${getEnvValue(key, envData)} ${s.unit}`
+            ? `${getEnvValue(key, envData, s.min, s.max)} ${s.unit}`
             : `- ${s.unit}`,
           range: `${s.min}~${s.max}`,
         };
